@@ -1,0 +1,88 @@
+[
+    {
+        "id": 1,
+        "nombre": "Blazer Elegante",
+        "descripcion": "Blazer de corte moderno perfecto para ocasiones formales",
+        "precio": 129.99,
+        "precioOriginal": 159.99,
+        "imagen": "images/conjuntoazul.png",
+        "categoria": "mujer",
+        "subcategoria": "blusas",
+        "nuevo": true,
+        "tallas": ["XS", "S", "M", "L", "XL"],
+        "colores": ["Negro", "Azul marino", "Gris"]
+    },
+    {
+        "id": 2,
+        "nombre": "Camisa Premium",
+        "descripcion": "Camisa de algodón egipcio de alta calidad",
+        "precio": 89.99,
+        "imagen": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+        "categoria": "mujer",
+        "subcategoria": null,
+        "nuevo": false,
+        "tallas": ["S", "M", "L", "XL", "XXL"],
+        "colores": ["Blanco", "Azul claro", "Rosa"]
+    },
+    {
+        "id": 3,
+        "nombre": "Vestido de Noche",
+        "descripcion": "Elegante vestido para ocasiones especiales",
+        "precio": 199.99,
+        "precioOriginal": 249.99,
+        "imagen": "images/vestidorojo.png",
+        "categoria": "mujer",
+        "subcategoria": "vestido",
+        "nuevo": true,
+        "tallas": ["XS", "S", "M", "L"],
+        "colores": ["Negro", "Rojo", "Azul medianoche"]
+    },
+    {
+        "id": 4,
+        "nombre": "Falda Short",
+        "descripcion": "Falda increíble",
+        "precio": 20,
+        "imagen": "images/falda-short.jpg",
+        "categoria": "mujer",
+        "subcategoria": "faldas",
+        "nuevo": true,
+        "tallas": ["S", "M", "L"],
+        "colores": ["Negro", "Rojo", "Rosa"]
+    },
+    {
+        "id": 4,
+        "nombre": "Falda Short",
+        "descripcion": "Falda increíble",
+        "precio": 20,
+        "imagen": "images/falda-short.jpg",
+        "categoria": "mujer",
+        "subcategoria": "faldas",
+        "nuevo": true,
+        "tallas": ["S", "M", "L"],
+        "colores": ["Negro", "Rojo", "Rosa"]
+    },
+    {
+        "id": 5,
+        "nombre": "Falda Short",
+        "descripcion": "Falda increíble",
+        "precio": 20,
+        "imagen": "images/falda-short.jpg",
+        "categoria": "mujer",
+        "subcategoria": "faldas",
+        "nuevo": true,
+        "tallas": ["S", "M", "L"],
+        "colores": ["Negro", "Rojo", "Rosa"]
+    },
+    {
+        "id": 6,
+        "nombre": "Falda Short",
+        "descripcion": "Falda increíble",
+        "precio": 20,
+        "imagen": "images/falda-short.jpg",
+        "categoria": "mujer",
+        "subcategoria": "faldas",
+        "nuevo": true,
+        "tallas": ["S", "M", "L"],
+        "colores": ["Negro", "Rojo", "Rosa"]
+    }
+]

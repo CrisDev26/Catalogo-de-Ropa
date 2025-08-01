@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MVA - Catálogo de Ropa Premium</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="images/logo (1).png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/logo (1).png">
+    <link rel="shortcut icon" href="images/logo (1).png">
+    <link rel="apple-touch-icon" href="images/logo (1).png">
+    
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Loader -->
+    <div id="loader" class="loader">
+        <div class="loader-content">
+            <div class="loader-logo">MVA</div>
+            <div class="loader-spinner"></div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <h1>MVA</h1>
+                </div>
+                
+                <ul class="nav-menu">
+                    <li><a href="#home" class="nav-link">Inicio</a></li>
+                    <li><a href="#products" class="nav-link">Catálogo</a></li>
+                    <li><a href="#about" class="nav-link">Nosotros</a></li>
+                    <li><a href="#contact" class="nav-link">Contacto</a></li>
+                </ul>
+
+                <div class="nav-icons">
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Buscar productos...">
+                    </div>
+                    <div class="cart-container">
+                        <i class="fas fa-shopping-bag cart-icon"></i>
+                        <span class="cart-count">0</span>
+                    </div>
+                    <div class="hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">Moda <span>Exclusiva</span> MVA</h1>
+                <p class="hero-subtitle">Descubre el lujo y la elegancia en cada prenda. Estilo único para personas únicas.</p>
+                <button class="hero-btn">Descubrir Colección</button>
+            </div>
+            <div class="hero-image">
+                <img src="images/hero.png" alt="Hero Fashion">
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories">
+        <div class="container">
+            <h2 class="section-title">Categorías</h2>
+            <div class="categories-grid">
+                <div class="category-card" data-category="mujer">
+                    <img src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Mujer">
+                    <div class="category-overlay">
+                        <h3>Mujer</h3>
+                        <div class="subcategories">
+                            <span class="subcategory" data-subcategory="body">Body</span>
+                            <span class="subcategory" data-subcategory="vestido">Vestido</span>
+                            <span class="subcategory" data-subcategory="traje-bano">Traje de baño</span>
+                            <span class="subcategory" data-subcategory="tops">Tops</span>
+                            <span class="subcategory" data-subcategory="faldas">Faldas</span>
+                            <span class="subcategory" data-subcategory="conjuntos">Conjuntos y enterizos</span>
+                            <span class="subcategory" data-subcategory="blusas">Blusas</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="category-card" data-category="hombre">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Hombre">
+                    <div class="category-overlay">
+                        <h3>Hombre</h3>
+                    </div>
+                </div>
+                <div class="category-card" data-category="accesorios">
+                    <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Accesorios">
+                    <div class="category-overlay">
+                        <h3>Accesorios</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="products">
+        <div class="container">
+            <div class="products-header">
+                <h2 class="section-title">Nuestros Productos</h2>
+                
+                <!-- Admin Controls - Hidden by default -->
+                <div class="admin-controls" id="admin-controls" style="display: none;">
+                    <button class="add-product-btn" id="add-product-btn">
+                        <i class="fas fa-plus"></i>
+                        Agregar Producto
+                    </button>
+                    <button class="export-json-btn" id="export-json-btn">
+                        <i class="fas fa-download"></i>
+                        Exportar JSON
+                    </button>
+                </div>
+                
+                <!-- Modern Filter System -->
+                <div class="modern-filters">
+                    <div class="filter-search-bar">
+                        <div class="search-input-wrapper">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="product-search" placeholder="Buscar productos..." class="search-input">
+                        </div>
+                        <div class="filter-toggle" id="filter-toggle">
+                            <i class="fas fa-sliders-h"></i>
+                            <span>Filtros</span>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-overlay" id="filter-overlay"></div>
+                    
+                    <div class="filter-panel" id="filter-panel">
+                        <div class="filter-panel-header">
+                            <h3>Filtros</h3>
+                            <button class="filter-close" id="filter-close">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="filter-section">
+                            <h4 class="filter-title">Categorías</h4>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="radio" name="category" value="all" checked>
+                                    <span class="filter-radio"></span>
+                                    <span class="filter-text">Todos</span>
+                                    <span class="filter-count" id="count-all">0</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="radio" name="category" value="mujer">
+                                    <span class="filter-radio"></span>
+                                    <span class="filter-text">Mujer</span>
+                                    <span class="filter-count" id="count-mujer">0</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="radio" name="category" value="hombre">
+                                    <span class="filter-radio"></span>
+                                    <span class="filter-text">Hombre</span>
+                                    <span class="filter-count" id="count-hombre">0</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="radio" name="category" value="accesorios">
+                                    <span class="filter-radio"></span>
+                                    <span class="filter-text">Accesorios</span>
+                                    <span class="filter-count" id="count-accesorios">0</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-section" id="subcategory-section" style="display: none;">
+                            <h4 class="filter-title">Subcategorías</h4>
+                            <div class="filter-options" id="subcategory-options">
+                                <!-- Subcategorías se cargarán dinámicamente -->
+                            </div>
+                        </div>
+                        
+                        <div class="filter-section">
+                            <h4 class="filter-title">Precio</h4>
+                            <div class="price-range">
+                                <div class="price-inputs">
+                                    <input type="number" id="min-price" placeholder="Min" class="price-input">
+                                    <span class="price-separator">-</span>
+                                    <input type="number" id="max-price" placeholder="Max" class="price-input">
+                                </div>
+                                <div class="price-slider">
+                                    <input type="range" id="price-range" min="0" max="500" value="500" class="range-slider">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-section">
+                            <h4 class="filter-title">Ordenar por</h4>
+                            <select id="sort-select" class="sort-dropdown">
+                                <option value="relevance">Relevancia</option>
+                                <option value="price-low">Precio: Menor a Mayor</option>
+                                <option value="price-high">Precio: Mayor a Menor</option>
+                                <option value="newest">Más Reciente</option>
+                                <option value="name">Nombre A-Z</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-actions">
+                            <button class="filter-clear" id="clear-filters">
+                                <i class="fas fa-times"></i>
+                                Limpiar Filtros
+                            </button>
+                            <button class="filter-apply" id="apply-filters">
+                                <i class="fas fa-check"></i>
+                                Aplicar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="active-filters" id="active-filters">
+                        <!-- Filtros activos se mostrarán aquí -->
+                    </div>
+                    
+                    <div class="results-info">
+                        <span id="results-count">0 productos encontrados</span>
+                        <div class="view-toggle">
+                            <button class="view-btn active" data-view="grid" title="Vista en cuadrícula">
+                                <i class="fas fa-th"></i>
+                            </button>
+                            <button class="view-btn" data-view="list" title="Vista en lista">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="products-grid" id="products-grid">
+                <!-- Los productos se cargarán dinámicamente con JavaScript -->
+            </div>
+            
+            <div class="load-more-container">
+                <button class="load-more-btn">Cargar Más</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>Mi Historia</h2>
+                    <p>¡Hola! Soy una emprendedora guayaquileña con una gran pasión por la moda. MVA nació de mi sueño de ayudar a hombres y mujeres a sentirse seguros y con estilo, con prendas que realcen su personalidad única.</p>
+                    <p>Con mucho esfuerzo y dedicación, estoy construyendo este emprendimiento paso a paso. Cada prenda que selecciono es pensada con amor para que encuentres ese look perfecto que te haga brillar y te represente.</p>
+                    <p class="about-mission">Mi misión es brindarte moda de calidad para todos los estilos, con atención personalizada y precios justos. ¡Juntos construimos este sueño!</p>
+                    <div class="about-stats">
+                        <div class="stat">
+                            <h3>2025</h3>
+                            <p>Año de inicio</p>
+                        </div>
+                        <div class="stat">
+                            <h3>100%</h3>
+                            <p>Hecho con amor</p>
+                        </div>
+                        <div class="stat">
+                            <h3>24/7</h3>
+                            <p>Pasión por la moda</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Emprendedora de moda">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter">
+        <div class="container">
+            <div class="newsletter-content">
+                <h2>Mantente al día</h2>
+                <p>Suscríbete a nuestro newsletter y recibe las últimas tendencias y ofertas exclusivas</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Tu email" required>
+                    <button type="submit">Suscribirse</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section footer-main">
+                    <h3>MVA</h3>
+                    <p>Emprendimiento de moda con estilo único para hombres y mujeres. Cada prenda está seleccionada con amor para resaltar tu personalidad auténtica.</p>
+                    <div class="social-icons">
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="https://w.app/rvwlnx" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> Guayaquil, Ecuador</li>
+                        <li><a href="https://w.app/rvwlnx" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp: +593 98 560 8961</a></li>
+                        <li><i class="fas fa-envelope"></i> mva.guayaquil@gmail.com</li>
+                        <li><i class="fas fa-clock"></i> Lun - Sáb: 9:00 AM - 7:00 PM</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Información</h4>
+                    <ul>
+                        <li><a href="#">Cómo comprar</a></li>
+                        <li><i class="fas fa-credit-card"></i> Métodos de pago: Próximamente</li>
+                        <li><i class="fas fa-truck"></i> Envíos a domicilio</li>
+                        <li><a href="https://w.app/rvwlnx" target="_blank"><i class="fab fa-whatsapp"></i> Consultas y pedidos</a></li>
+                        <li><a href="#">Preguntas frecuentes</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 MVA - Consigue tu estilo | Guayaquil, Ecuador</p>
+                <p class="footer-note">Hecho con ❤️ por una emprendedora guayaquileña</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="cart-modal">
+        <div class="cart-content">
+            <div class="cart-header">
+                <h3>Carrito de Compras</h3>
+                <button class="close-cart">&times;</button>
+            </div>
+            <div class="cart-items" id="cart-items">
+                <!-- Los items del carrito se mostrarán aquí -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Total: <span id="cart-total">$0.00</span></span>
+                </div>
+                <div class="payment-info">
+                    <p><i class="fas fa-info-circle"></i> Métodos de pago disponibles próximamente</p>
+                    <p class="contact-note">Por ahora, contáctanos por WhatsApp para finalizar tu compra</p>
+                </div>
+                <a href="https://w.app/rvwlnx" target="_blank" class="checkout-btn whatsapp-checkout">
+                    <i class="fab fa-whatsapp"></i>
+                    Contactar por WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="product-modal" class="product-modal">
+        <div class="product-modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="product-modal-body">
+                <!-- El contenido del producto se cargará dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Product Form Modal -->
+    <div id="admin-product-modal" class="admin-modal" style="display: none;">
+        <div class="admin-modal-content">
+            <div class="admin-modal-header">
+                <h3 id="admin-modal-title">Agregar Nuevo Producto</h3>
+                <button class="close-admin-modal" id="close-admin-modal">&times;</button>
+            </div>
+            <div class="admin-modal-body">
+                <form id="admin-product-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="admin-nombre">Nombre del Producto *</label>
+                            <input type="text" id="admin-nombre" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="admin-precio">Precio *</label>
+                            <input type="number" id="admin-precio" step="0.01" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="admin-precio-original">Precio Original (opcional)</label>
+                            <input type="number" id="admin-precio-original" step="0.01">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="admin-categoria">Categoría *</label>
+                            <select id="admin-categoria" required>
+                                <option value="">Seleccionar categoría</option>
+                                <option value="mujer">Mujer</option>
+                                <option value="hombre">Hombre</option>
+                                <option value="accesorios">Accesorios</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="admin-subcategoria">Subcategoría</label>
+                            <select id="admin-subcategoria">
+                                <option value="">Sin subcategoría</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group checkbox-group">
+                            <label>
+                                <input type="checkbox" id="admin-nuevo">
+                                <span class="checkmark"></span>
+                                Producto Nuevo
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="admin-descripcion">Descripción *</label>
+                        <textarea id="admin-descripcion" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="admin-imagen">URL de la Imagen *</label>
+                        <input type="url" id="admin-imagen" required>
+                        <small>Usa URLs de Unsplash o sube tu imagen a un hosting</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="admin-tallas">Tallas (separadas por comas)</label>
+                        <input type="text" id="admin-tallas" placeholder="XS, S, M, L, XL">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="admin-colores">Colores (separados por comas)</label>
+                        <input type="text" id="admin-colores" placeholder="Negro, Blanco, Azul">
+                    </div>
+                    
+                    <div class="image-preview" id="image-preview" style="display: none;">
+                        <img id="preview-img" src="" alt="Preview">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="cancel-btn" id="cancel-admin-form">Cancelar</button>
+                        <button type="submit" class="save-btn">Guardar Producto</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
