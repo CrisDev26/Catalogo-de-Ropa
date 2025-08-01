@@ -12,14 +12,6 @@
 - 🔍 **Sistema de Filtros** avanzado y moderno
 - 📞 **WhatsApp Integration** para pedidos directos
 - ⚡ **Smooth Transitions** con animaciones fluidas
-- 👩‍💼 **Admin Panel** accesible via URL parameter
-
-## 🚀 Demo en Vivo
-
-**Visita:** [https://tu-usuario.github.io/mva-catalogo](https://tu-usuario.github.io/mva-catalogo)
-
-### 🔑 Modo Administrador
-Accede al panel admin agregando: `?admin=mva2025` al final de la URL
 
 ## 🛍️ Funcionalidades
 
@@ -46,10 +38,3 @@ Accede al panel admin agregando: `?admin=mva2025` al final de la URL
 - **Vanilla JavaScript** (ES6+)
 - **Font Awesome** para iconografía
 - **Google Fonts** (Playfair Display + Inter)
-
-
----
-
-### 💝 Hecho con amor por una emprendedora guayaquileña
-
-© 2025 MVA - Consigue tu estilo
