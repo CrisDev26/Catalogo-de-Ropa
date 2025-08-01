@@ -48,41 +48,5 @@
         "nuevo": true,
         "tallas": ["S", "M", "L"],
         "colores": ["Negro", "Rojo", "Rosa"]
-    },
-    {
-        "id": 4,
-        "nombre": "Falda Short",
-        "descripcion": "Falda increíble",
-        "precio": 20,
-        "imagen": "images/falda-short.jpg",
-        "categoria": "mujer",
-        "subcategoria": "faldas",
-        "nuevo": true,
-        "tallas": ["S", "M", "L"],
-        "colores": ["Negro", "Rojo", "Rosa"]
-    },
-    {
-        "id": 5,
-        "nombre": "Falda Short",
-        "descripcion": "Falda increíble",
-        "precio": 20,
-        "imagen": "images/falda-short.jpg",
-        "categoria": "mujer",
-        "subcategoria": "faldas",
-        "nuevo": true,
-        "tallas": ["S", "M", "L"],
-        "colores": ["Negro", "Rojo", "Rosa"]
-    },
-    {
-        "id": 6,
-        "nombre": "Falda Short",
-        "descripcion": "Falda increíble",
-        "precio": 20,
-        "imagen": "images/falda-short.jpg",
-        "categoria": "mujer",
-        "subcategoria": "faldas",
-        "nuevo": true,
-        "tallas": ["S", "M", "L"],
-        "colores": ["Negro", "Rojo", "Rosa"]
     }
 ]
