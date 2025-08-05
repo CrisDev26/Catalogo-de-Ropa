@@ -220,7 +220,7 @@
       "nombre": "Blusa",
       "descripcion": "Blusa de tiras confeccionada en tela alicrada que se adapta al cuerpo.",
       "precio": 6.99,
-      "imagen": "images/chaqueta-cuero.jpg",
+      "imagen": "images/blusa_azulmarino.jpg",
       "categoria": "mujer",
       "subcategoria": "Blusas",
       "nuevo": true,
@@ -263,7 +263,7 @@
       "colores": [
         "Coral"
       ],
-      "id": 1754422233666
+      "id": 16
     },
     {
       "nombre": "Vestido Corto",
@@ -281,7 +281,7 @@
         "Beige"
       ],
       "precioOriginal": 14.99,
-      "id": 1754422385335
+      "id": 17
     }
   ]
 }

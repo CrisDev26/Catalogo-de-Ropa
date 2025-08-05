@@ -205,12 +205,29 @@ function initModernFilters() {
 // Cargar productos desde el archivo JSON
 async function loadProductsFromJSON() {
     try {
+        // Limpiar localStorage corrupto (temporal)
+        const stored = localStorage.getItem('productos');
+        if (stored) {
+            try {
+                const parsed = JSON.parse(stored);
+                if (!Array.isArray(parsed)) {
+                    console.log('Limpiando localStorage corrupto...');
+                    localStorage.removeItem('productos');
+                }
+            } catch (e) {
+                console.log('Limpiando localStorage corrupto...');
+                localStorage.removeItem('productos');
+            }
+        }
+        
         // Siempre cargar productos base del JSON
         const response = await fetch('data/productos.json');
         let productosBase = [];
         
         if (response.ok) {
-            productosBase = await response.json();
+            const data = await response.json();
+            // Verificar si el JSON tiene estructura con metadata o es array directo
+            productosBase = Array.isArray(data) ? data : (data.productos || []);
         } else {
             // Fallback a productos por defecto si no se puede cargar el JSON
             productosBase = getDefaultProducts();
