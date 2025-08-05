@@ -1526,19 +1526,28 @@ function handleAdminCategoryChange(e) {
     const categoria = e.target.value;
     const subcategoriaSelect = document.getElementById('admin-subcategoria');
     
-    if (!subcategoriaSelect) return;
+    console.log('🔧 Cambiando categoría a:', categoria);
+    
+    if (!subcategoriaSelect) {
+        console.warn('🔧 No se encontró el select de subcategoría');
+        return;
+    }
     
     // Limpiar opciones
     subcategoriaSelect.innerHTML = '<option value="">Sin subcategoría</option>';
     
     // Agregar subcategorías según la categoría
     const subcategorias = subcategoriasPorCategoria[categoria] || [];
+    console.log('🔧 Subcategorías disponibles para', categoria, ':', subcategorias);
+    
     subcategorias.forEach(sub => {
         const option = document.createElement('option');
         option.value = sub;
         option.textContent = sub.charAt(0).toUpperCase() + sub.slice(1).replace('-', ' ');
         subcategoriaSelect.appendChild(option);
     });
+    
+    console.log('🔧 Opciones de subcategoría creadas:', subcategoriaSelect.options.length);
 }
 
 function handleImagePreview(e) {
@@ -1845,27 +1854,46 @@ function editarProducto(productId) {
         if (nombreField) nombreField.value = producto.nombre || '';
         if (precioField) precioField.value = producto.precio || '';
         if (precioOriginalField) precioOriginalField.value = producto.precioOriginal || '';
-        if (categoriaField) categoriaField.value = producto.categoria || '';
         if (descripcionField) descripcionField.value = producto.descripcion || '';
         if (imagenField) imagenField.value = producto.imagen || '';
         if (tallasField) tallasField.value = producto.tallas ? producto.tallas.join(', ') : '';
         if (coloresField) coloresField.value = producto.colores ? producto.colores.join(', ') : '';
         if (nuevoField) nuevoField.checked = producto.nuevo || false;
 
-        // Cargar subcategorías y seleccionar la actual
-        if (producto.categoria && categoriaField) {
-            // Disparar el evento change para cargar subcategorías
-            const event = new Event('change', { bubbles: true });
-            categoriaField.dispatchEvent(event);
+        // Manejar categoría y subcategoría de forma secuencial
+        if (categoriaField && producto.categoria) {
+            // Primero establecer la categoría
+            categoriaField.value = producto.categoria;
+            console.log('🔧 Categoría establecida:', producto.categoria);
             
-            // Seleccionar la subcategoría después de cargar las opciones
-            setTimeout(() => {
-                const subcategoriaSelect = document.getElementById('admin-subcategoria');
-                if (subcategoriaSelect && producto.subcategoria) {
-                    subcategoriaSelect.value = producto.subcategoria;
-                    console.log('🔧 Subcategoría seleccionada:', producto.subcategoria);
-                }
-            }, 150);
+            // Luego cargar las subcategorías
+            handleAdminCategoryChange({ target: { value: producto.categoria } });
+            
+            // Finalmente establecer la subcategoría si existe
+            if (producto.subcategoria) {
+                const setSubcategoriaConReintento = (intentos = 0) => {
+                    const subcategoriaSelect = document.getElementById('admin-subcategoria');
+                    if (subcategoriaSelect) {
+                        console.log('🔧 Intentando establecer subcategoría:', producto.subcategoria, '(intento:', intentos + 1, ')');
+                        console.log('🔧 Opciones disponibles:', Array.from(subcategoriaSelect.options).map(opt => opt.value));
+                        
+                        // Verificar que la opción existe
+                        const optionExists = Array.from(subcategoriaSelect.options).some(option => option.value === producto.subcategoria);
+                        if (optionExists) {
+                            subcategoriaSelect.value = producto.subcategoria;
+                            console.log('✅ Subcategoría establecida exitosamente:', producto.subcategoria);
+                        } else if (intentos < 3) {
+                            // Reintentar si no existe la opción y no hemos agotado los intentos
+                            setTimeout(() => setSubcategoriaConReintento(intentos + 1), 100);
+                        } else {
+                            console.warn('❌ No se pudo establecer la subcategoría después de múltiples intentos');
+                        }
+                    }
+                };
+                
+                // Dar un momento para que se carguen las opciones y luego intentar
+                setTimeout(() => setSubcategoriaConReintento(), 50);
+            }
         }
 
         // Mostrar preview de imagen si existe
