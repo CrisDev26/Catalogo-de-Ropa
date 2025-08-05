@@ -116,14 +116,20 @@
                 
                 <!-- Admin Controls - Hidden by default -->
                 <div class="admin-controls" id="admin-controls" style="display: none;">
-                    <button class="add-product-btn" id="add-product-btn">
-                        <i class="fas fa-plus"></i>
-                        Agregar Producto
-                    </button>
-                    <button class="export-json-btn" id="export-json-btn">
-                        <i class="fas fa-download"></i>
-                        Exportar JSON
-                    </button>
+                    <div class="admin-info" id="admin-info">
+                        <span class="products-count">Productos: <span id="products-total">0</span></span>
+                        <span class="admin-badge">ADMIN</span>
+                    </div>
+                    <div class="admin-buttons">
+                        <button class="add-product-btn" id="add-product-btn">
+                            <i class="fas fa-plus"></i>
+                            Agregar Producto
+                        </button>
+                        <button class="export-json-btn" id="export-json-btn">
+                            <i class="fas fa-download"></i>
+                            Exportar JSON
+                        </button>
+                    </div>
                 </div>
                 
                 <!-- Modern Filter System -->
@@ -432,9 +438,12 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="admin-imagen">URL de la Imagen *</label>
-                        <input type="url" id="admin-imagen" required>
-                        <small>Usa URLs de Unsplash o sube tu imagen a un hosting</small>
+                        <label for="admin-imagen">URL de la Imagen (opcional)</label>
+                        <input type="url" id="admin-imagen" placeholder="Puedes agregar la imagen después">
+                        <small>
+                            <i class="fas fa-info-circle"></i>
+                            Opcional: Puedes usar URLs de Unsplash, subir a un hosting, o agregar la imagen más tarde editando el producto
+                        </small>
                     </div>
                     
                     <div class="form-group">

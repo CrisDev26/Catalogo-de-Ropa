@@ -3,7 +3,7 @@
         "id": 1,
         "nombre": "Conjunto Elegante",
         "descripcion": "Blazer de corte moderno perfecto para ocasiones formales",
-        "precio": 15.00,
+        "precio": 14.99,
         "precioOriginal": 20.00,
         "imagen": "images/conjuntoazul.png",
         "categoria": "mujer",

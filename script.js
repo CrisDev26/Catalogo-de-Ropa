@@ -187,27 +187,60 @@ function initModernFilters() {
 // Cargar productos desde el archivo JSON
 async function loadProductsFromJSON() {
     try {
-        // En modo admin, priorizar localStorage
+        // Siempre cargar productos base del JSON
+        const response = await fetch('data/productos.json');
+        let productosBase = [];
+        
+        if (response.ok) {
+            productosBase = await response.json();
+        } else {
+            // Fallback a productos por defecto si no se puede cargar el JSON
+            productosBase = getDefaultProducts();
+        }
+        
+        // En modo admin, combinar productos base con los de localStorage
         if (isAdminMode) {
             const adminProducts = localStorage.getItem('mva_admin_products');
             if (adminProducts) {
-                productos = JSON.parse(adminProducts);
-                return;
+                const productosAdmin = JSON.parse(adminProducts);
+                // Combinar productos: base + admin (evitando duplicados por ID)
+                const productosBaseIds = productosBase.map(p => p.id);
+                const productosAdminSinDuplicados = productosAdmin.filter(p => !productosBaseIds.includes(p.id));
+                productos = [...productosBase, ...productosAdminSinDuplicados];
+            } else {
+                productos = productosBase;
             }
+        } else {
+            // Modo normal: solo productos base
+            productos = productosBase;
         }
         
-        const response = await fetch('data/productos.json');
-        if (response.ok) {
-            productos = await response.json();
-        } else {
-            // Fallback a productos por defecto si no se puede cargar el JSON
-            productos = getDefaultProducts();
-        }
     } catch (error) {
         console.error('Error cargando productos:', error);
         // Fallback a productos por defecto
         productos = getDefaultProducts();
     }
+}
+
+// Función auxiliar para validar imágenes
+function getValidImageSrc(imagenUrl) {
+    // Si no hay imagen, usar placeholder
+    if (!imagenUrl || imagenUrl.trim() === '') {
+        return 'images/placeholder-product.svg';
+    }
+    
+    // Si es una URL externa (http/https), mantenerla
+    if (imagenUrl.startsWith('http://') || imagenUrl.startsWith('https://')) {
+        return imagenUrl;
+    }
+    
+    // Si es una ruta local que no empieza con images/, agregarla
+    if (!imagenUrl.startsWith('images/')) {
+        return 'images/' + imagenUrl;
+    }
+    
+    // Si ya empieza con images/, mantenerla
+    return imagenUrl;
 }
 
 // Productos por defecto como fallback
@@ -309,10 +342,13 @@ function renderProductos() {
         return;
     }
     
-    const productosHTML = productosAMostrar.map(producto => `
+    const productosHTML = productosAMostrar.map(producto => {
+        const imagenSrc = getValidImageSrc(producto.imagen);
+        return `
         <div class="product-card" data-id="${producto.id}" onclick="abrirProductModal(${producto.id})">
             <div class="product-image">
-                <img src="${producto.imagen}" alt="${producto.nombre}" loading="lazy">
+                <img src="${imagenSrc}" alt="${producto.nombre}" loading="lazy" 
+                     onerror="this.src='images/placeholder-product.svg'; this.onerror=null;">
                 ${producto.nuevo ? '<span class="product-badge">Nuevo</span>' : ''}
             </div>
             <div class="product-info">
@@ -327,7 +363,7 @@ function renderProductos() {
                 </button>
             </div>
         </div>
-    `).join('');
+    `}).join('');
     
     productsGrid.innerHTML = productosHTML;
     
@@ -342,6 +378,9 @@ function renderProductos() {
     
     // Actualizar filtros activos
     updateActiveFilters();
+    
+    // Actualizar contador admin si está activo
+    updateAdminCounter();
 }
 
 // Funciones auxiliares de filtrado
@@ -1312,6 +1351,8 @@ function initAdminMode() {
     const adminControls = document.getElementById('admin-controls');
     if (adminControls) {
         adminControls.style.display = 'flex';
+        // Actualizar contador inicial
+        setTimeout(updateAdminCounter, 100);
     }
     
     // Event listeners para botones de admin
@@ -1445,12 +1486,14 @@ function handleAdminFormSubmit(e) {
     e.preventDefault();
     
     const formData = new FormData(e.target);
+    const imagenValue = document.getElementById('admin-imagen').value;
+    
     const newProduct = {
         id: Date.now(), // ID único basado en timestamp
         nombre: document.getElementById('admin-nombre').value,
         descripcion: document.getElementById('admin-descripcion').value,
         precio: parseFloat(document.getElementById('admin-precio').value),
-        imagen: document.getElementById('admin-imagen').value,
+        imagen: imagenValue || 'images/placeholder-product.svg', // Imagen por defecto si está vacía
         categoria: document.getElementById('admin-categoria').value,
         subcategoria: document.getElementById('admin-subcategoria').value || null,
         nuevo: document.getElementById('admin-nuevo').checked,
@@ -1464,17 +1507,20 @@ function handleAdminFormSubmit(e) {
         newProduct.precioOriginal = parseFloat(precioOriginal);
     }
     
-    // Validaciones
-    if (!newProduct.nombre || !newProduct.descripcion || !newProduct.precio || !newProduct.imagen || !newProduct.categoria) {
-        mostrarNotificacion('Por favor completa todos los campos obligatorios');
+    // Validaciones (sin imagen obligatoria)
+    if (!newProduct.nombre || !newProduct.descripcion || !newProduct.precio || !newProduct.categoria) {
+        mostrarNotificacion('Por favor completa todos los campos obligatorios (nombre, descripción, precio, categoría)');
         return;
     }
     
-    // Agregar producto
+    // Agregar producto al array completo
     productos.push(newProduct);
     
-    // Guardar en localStorage
-    localStorage.setItem('mva_admin_products', JSON.stringify(productos));
+    // Guardar solo productos NUEVOS en localStorage (no los del JSON base)
+    const productosAdmin = localStorage.getItem('mva_admin_products');
+    let productosAdminArray = productosAdmin ? JSON.parse(productosAdmin) : [];
+    productosAdminArray.push(newProduct);
+    localStorage.setItem('mva_admin_products', JSON.stringify(productosAdminArray));
     
     // Actualizar vista
     renderProductos();
@@ -1492,10 +1538,36 @@ function exportToJSON() {
     
     const link = document.createElement('a');
     link.href = URL.createObjectURL(dataBlob);
-    link.download = 'productos-mva.json';
+    link.download = 'productos-mva-completo.json';
     link.click();
     
-    mostrarNotificacion('Archivo JSON exportado exitosamente');
+    // Mostrar información detallada
+    const productosBase = productos.length - (JSON.parse(localStorage.getItem('mva_admin_products') || '[]')).length;
+    const productosAdmin = JSON.parse(localStorage.getItem('mva_admin_products') || '[]').length;
+    
+    mostrarNotificacion(`JSON exportado: ${productos.length} productos total (${productosBase} base + ${productosAdmin} admin)`);
+}
+
+function getAdminInfo() {
+    const productosAdmin = JSON.parse(localStorage.getItem('mva_admin_products') || '[]');
+    const productosBase = productos.length - productosAdmin.length;
+    
+    return {
+        total: productos.length,
+        base: productosBase,
+        admin: productosAdmin.length,
+        adminProducts: productosAdmin
+    };
+}
+
+function updateAdminCounter() {
+    if (isAdminMode) {
+        const productsTotal = document.getElementById('products-total');
+        if (productsTotal) {
+            const info = getAdminInfo();
+            productsTotal.textContent = `${info.total} (${info.base} base + ${info.admin} admin)`;
+        }
+    }
 }
 
 function mostrarNotificacion(mensaje) {

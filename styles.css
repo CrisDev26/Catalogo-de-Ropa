@@ -1716,12 +1716,43 @@ section.visible {
 /* Admin Mode Styles */
 .admin-controls {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     gap: 1rem;
     margin-bottom: 2rem;
     padding: 1rem;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-radius: 12px;
+}
+
+.admin-info {
+    display: flex;
     align-items: center;
+    gap: 1rem;
+    color: white;
+}
+
+.products-count {
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.25rem 0.75rem;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+}
+
+.admin-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.5rem;
+    background: #ff6b6b;
+    color: white;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+}
+
+.admin-buttons {
+    display: flex;
+    gap: 0.75rem;
 }
 
 .add-product-btn,
@@ -1737,6 +1768,7 @@ section.visible {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    font-size: 0.9rem;
 }
 
 .add-product-btn:hover,
@@ -2118,4 +2150,43 @@ section.visible {
         object-fit: contain;
         object-position: center;
     }
+}
+
+/* Placeholder para productos sin imagen */
+.product-placeholder {
+    background: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.product-placeholder:hover {
+    border-color: var(--primary-color);
+    background: #f0f2f5;
+}
+
+.product-placeholder svg {
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.product-placeholder:hover svg {
+    opacity: 1;
+}
+
+/* Estilos para imágenes de productos con fallback */
+.product-item img {
+    transition: opacity 0.3s ease;
+}
+
+.product-item img[src*="placeholder-product.svg"] {
+    opacity: 0.8;
+}
+
+.product-item:hover img[src*="placeholder-product.svg"] {
+    opacity: 1;
 }

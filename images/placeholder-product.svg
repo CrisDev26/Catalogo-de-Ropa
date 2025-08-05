@@ -1,0 +1,8 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="400" height="400" fill="#F5F5F5"/>
+<path d="M175 150H225V175H200V200H175V175H150V150H175Z" fill="#CCCCCC"/>
+<path d="M125 250H275V275H125V250Z" fill="#CCCCCC"/>
+<path d="M150 275H250V300H150V275Z" fill="#CCCCCC"/>
+<text x="200" y="340" text-anchor="middle" fill="#999999" font-family="Arial, sans-serif" font-size="16" font-weight="500">Imagen no disponible</text>
+<text x="200" y="360" text-anchor="middle" fill="#BBBBBB" font-family="Arial, sans-serif" font-size="12">Puedes agregar una después</text>
+</svg>
