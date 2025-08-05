@@ -6,6 +6,7 @@ let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 let filtroActivo = 'all';
 let productosVisible = 6;
 let isAdminMode = false;
+let editingProductId = null; // Variable para controlar el producto en edición
 
 // Variables de filtros modernos
 let filtros = {
@@ -119,6 +120,17 @@ function init() {
         loader.classList.add('hidden');
     }, 2000);
     
+    // Asegurar que el panel de filtros esté oculto al inicializar
+    if (filterPanel) {
+        filterPanel.classList.remove('active');
+    }
+    if (filterOverlay) {
+        filterOverlay.classList.remove('active');
+    }
+    
+    // Asegurar que el scroll del body esté habilitado
+    document.body.style.overflow = '';
+    
     // Inicializar filtros de subcategorías (ocultos por defecto)
     const subcategoryFiltersContainer = document.getElementById('subcategory-filters');
     if (subcategoryFiltersContainer) {
@@ -149,6 +161,30 @@ function init() {
 
 // Inicializar sistema de filtros moderno
 function initModernFilters() {
+    // Si está en modo admin, ocultar el sistema de filtros
+    if (isAdminMode) {
+        const filterToggle = document.getElementById('filter-toggle');
+        const modernFilters = document.querySelector('.modern-filters');
+        
+        if (filterToggle) {
+            filterToggle.style.display = 'none';
+        }
+        if (modernFilters) {
+            modernFilters.style.display = 'none';
+        }
+        
+        console.log('🔧 Sistema de filtros deshabilitado en modo admin');
+        return; // Salir temprano si está en modo admin
+    }
+    
+    // Asegurar que el panel de filtros esté oculto por defecto
+    if (filterPanel) {
+        filterPanel.classList.remove('active');
+    }
+    if (filterOverlay) {
+        filterOverlay.classList.remove('active');
+    }
+    
     updateProductCounts();
     
     // Configurar precio máximo del slider
@@ -166,24 +202,6 @@ function initModernFilters() {
     renderProductos();
 }
 
-// Inicializar sistema de filtros moderno
-function initModernFilters() {
-    updateProductCounts();
-    
-    // Configurar precio máximo del slider
-    if (productos.length > 0 && priceRange) {
-        const maxPrice = Math.max(...productos.map(p => p.precio));
-        priceRange.max = maxPrice;
-        priceRange.value = maxPrice;
-        filtros.precioMax = Infinity; // Mantener Infinity para mostrar todos por defecto
-    }
-    
-    // Ocultar subcategorías inicialmente
-    ocultarSubcategorias();
-    
-    // Renderizar productos iniciales
-    renderProductos();
-}
 // Cargar productos desde el archivo JSON
 async function loadProductsFromJSON() {
     try {
@@ -198,38 +216,36 @@ async function loadProductsFromJSON() {
             productosBase = getDefaultProducts();
         }
         
-        // En modo admin, combinar productos base con los de localStorage
-        if (isAdminMode) {
-            const adminProducts = localStorage.getItem('mva_admin_products');
-            if (adminProducts) {
-                const productosAdmin = JSON.parse(adminProducts);
-                // Combinar productos: base + admin (evitando duplicados por ID)
-                const productosBaseIds = productosBase.map(p => p.id);
-                const productosAdminSinDuplicados = productosAdmin.filter(p => !productosBaseIds.includes(p.id));
-                productos = [...productosBase, ...productosAdminSinDuplicados];
-            } else {
-                productos = productosBase;
-            }
+        // Cargar productos desde localStorage (incluyendo editados y nuevos)
+        const productosGuardados = localStorage.getItem('productos');
+        if (productosGuardados) {
+            // Si hay productos en localStorage, usarlos (incluye editados)
+            productos = JSON.parse(productosGuardados);
         } else {
-            // Modo normal: solo productos base
+            // Si no hay productos guardados, usar los productos base
             productos = productosBase;
+            // Guardar productos base en localStorage para futuras ediciones
+            localStorage.setItem('productos', JSON.stringify(productosBase));
         }
+        
+        console.log(`Productos cargados: ${productos.length} productos disponibles`);
         
     } catch (error) {
         console.error('Error cargando productos:', error);
         // Fallback a productos por defecto
         productos = getDefaultProducts();
+        localStorage.setItem('productos', JSON.stringify(productos));
     }
 }
 
 // Función auxiliar para validar imágenes
 function getValidImageSrc(imagenUrl) {
-    // Si no hay imagen, usar placeholder
+    // Si no hay imagen, usar placeholder local
     if (!imagenUrl || imagenUrl.trim() === '') {
-        return 'images/placeholder-product.svg';
+        return 'images/placeholder-product.jpg';
     }
     
-    // Si es una URL externa (http/https), mantenerla
+    // Si es una URL externa (http/https), mantenerla (para productos existentes)
     if (imagenUrl.startsWith('http://') || imagenUrl.startsWith('https://')) {
         return imagenUrl;
     }
@@ -300,32 +316,38 @@ function renderProductos() {
         return;
     }
     
-    // Aplicar filtros
-    let productosFiltrados = productos.filter(producto => {
-        // Filtro de categoría
-        const categoriaCoincide = filtros.categoria === 'all' || producto.categoria === filtros.categoria;
-        
-        // Filtro de subcategoría
-        const subcategoriaCoincide = !filtros.subcategoria || producto.subcategoria === filtros.subcategoria;
-        
-        // Filtro de búsqueda
-        const busquedaCoincide = !filtros.busqueda || 
-            producto.nombre.toLowerCase().includes(filtros.busqueda.toLowerCase()) ||
-            producto.descripcion.toLowerCase().includes(filtros.busqueda.toLowerCase()) ||
-            producto.categoria.toLowerCase().includes(filtros.busqueda.toLowerCase()) ||
-            (producto.subcategoria && producto.subcategoria.toLowerCase().includes(filtros.busqueda.toLowerCase()));
-        
-        // Filtro de precio
-        const precioCoincide = producto.precio >= filtros.precioMin && producto.precio <= filtros.precioMax;
-        
-        return categoriaCoincide && subcategoriaCoincide && busquedaCoincide && precioCoincide;
-    });
+    let productosFiltrados;
     
-    // Aplicar ordenamiento
-    productosFiltrados = aplicarOrdenamiento(productosFiltrados);
-    
-    // Actualizar contador de resultados
-    updateResultsCount(productosFiltrados.length);
+    // En modo admin, mostrar todos los productos sin filtros
+    if (isAdminMode) {
+        productosFiltrados = [...productos];
+        updateResultsCount(productosFiltrados.length);
+    } else {
+        // Aplicar filtros solo en modo normal
+        productosFiltrados = productos.filter(producto => {
+            // Filtro de categoría
+            const categoriaCoincide = filtros.categoria === 'all' || producto.categoria === filtros.categoria;
+            
+            // Filtro de subcategoría
+            const subcategoriaCoincide = !filtros.subcategoria || producto.subcategoria === filtros.subcategoria;
+            
+            // Filtro de búsqueda
+            const busquedaCoincide = !filtros.busqueda || 
+                producto.nombre.toLowerCase().includes(filtros.busqueda.toLowerCase()) ||
+                producto.descripcion.toLowerCase().includes(filtros.busqueda.toLowerCase()) ||
+                producto.categoria.toLowerCase().includes(filtros.busqueda.toLowerCase()) ||
+                (producto.subcategoria && producto.subcategoria.toLowerCase().includes(filtros.busqueda.toLowerCase()));
+            
+            // Filtro de precio
+            const precioCoincide = producto.precio >= filtros.precioMin && producto.precio <= filtros.precioMax;
+            
+            return categoriaCoincide && subcategoriaCoincide && busquedaCoincide && precioCoincide;
+        });
+        
+        // Aplicar ordenamiento solo en modo normal
+        productosFiltrados = aplicarOrdenamiento(productosFiltrados);
+        updateResultsCount(productosFiltrados.length);
+    }
     
     // Mostrar productos (con paginación)
     const productosAMostrar = productosFiltrados.slice(0, productosVisible);
@@ -344,8 +366,22 @@ function renderProductos() {
     
     const productosHTML = productosAMostrar.map(producto => {
         const imagenSrc = getValidImageSrc(producto.imagen);
+        
+        // Botones de administración solo si está en modo admin
+        const adminButtons = isAdminMode ? `
+            <div class="admin-product-actions">
+                <button class="edit-product-btn" onclick="event.stopPropagation(); editarProducto(${producto.id})" title="Editar producto">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="delete-product-btn" onclick="event.stopPropagation(); eliminarProducto(${producto.id})" title="Eliminar producto">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        ` : '';
+        
         return `
         <div class="product-card" data-id="${producto.id}" onclick="abrirProductModal(${producto.id})">
+            ${adminButtons}
             <div class="product-image">
                 <img src="${imagenSrc}" alt="${producto.nombre}" loading="lazy" 
                      onerror="this.src='images/placeholder-product.svg'; this.onerror=null;">
@@ -402,12 +438,23 @@ function aplicarOrdenamiento(productos) {
 
 function updateResultsCount(count) {
     if (resultsCount) {
-        resultsCount.textContent = `${count} producto${count !== 1 ? 's' : ''} encontrado${count !== 1 ? 's' : ''}`;
+        if (isAdminMode) {
+            resultsCount.textContent = `Modo Admin - ${count} producto${count !== 1 ? 's' : ''} total${count !== 1 ? 'es' : ''}`;
+        } else {
+            resultsCount.textContent = `${count} producto${count !== 1 ? 's' : ''} encontrado${count !== 1 ? 's' : ''}`;
+        }
     }
 }
 
 function updateActiveFilters() {
     if (!activeFiltersContainer) return;
+    
+    // No mostrar filtros activos en modo admin
+    if (isAdminMode) {
+        activeFiltersContainer.innerHTML = '';
+        activeFiltersContainer.style.display = 'none';
+        return;
+    }
     
     const activeFilters = [];
     
@@ -486,6 +533,12 @@ function updateActiveFilters() {
 
 // Funciones de manejo de filtros
 function toggleFilterPanel() {
+    // No permitir abrir filtros en modo admin
+    if (isAdminMode) {
+        console.log('🔧 Filtros deshabilitados en modo admin');
+        return;
+    }
+    
     if (filterPanel) {
         filterPanel.classList.toggle('active');
     }
@@ -860,8 +913,22 @@ function handleSearch(e) {
         return;
     }
     
-    productsGrid.innerHTML = productosFiltrados.map(producto => `
+    productsGrid.innerHTML = productosFiltrados.map(producto => {
+        // Botones de administración solo si está en modo admin
+        const adminButtons = isAdminMode ? `
+            <div class="admin-product-actions">
+                <button class="edit-product-btn" onclick="event.stopPropagation(); editarProducto(${producto.id})" title="Editar producto">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="delete-product-btn" onclick="event.stopPropagation(); eliminarProducto(${producto.id})" title="Eliminar producto">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        ` : '';
+        
+        return `
         <div class="product-card" data-id="${producto.id}" onclick="abrirProductModal(${producto.id})">
+            ${adminButtons}
             <div class="product-image">
                 <img src="${producto.imagen}" alt="${producto.nombre}" loading="lazy">
                 ${producto.nuevo ? '<span class="product-badge">Nuevo</span>' : ''}
@@ -878,7 +945,7 @@ function handleSearch(e) {
                 </button>
             </div>
         </div>
-    `).join('');
+    `}).join('');
     
     loadMoreBtn.style.display = 'none';
 }
@@ -938,7 +1005,7 @@ function mostrarNotificacion(mensaje) {
 
 // Modern Filter System Functions
 function handleKeyDown(e) {
-    if (e.key === 'Escape' && filterPanel.classList.contains('show')) {
+    if (e.key === 'Escape' && filterPanel && filterPanel.classList.contains('active')) {
         closeFilterPanel();
     }
 }
@@ -1392,7 +1459,7 @@ function initAdminMode() {
     // Event listener para preview de imagen
     const adminImagen = document.getElementById('admin-imagen');
     if (adminImagen) {
-        adminImagen.addEventListener('input', handleImagePreview);
+        adminImagen.addEventListener('change', handleImagePreview);
     }
     
     // Click fuera del modal
@@ -1418,6 +1485,18 @@ function closeAdminModalHandler() {
     if (modal) {
         modal.style.display = 'none';
     }
+    
+    // Resetear variables de edición
+    editingProductId = null;
+    
+    // Cambiar el título del modal de vuelta a "Agregar"
+    const modalTitle = document.getElementById('admin-modal-title');
+    if (modalTitle) {
+        modalTitle.textContent = 'Agregar Nuevo Producto';
+    }
+    
+    // Resetear formulario
+    resetAdminForm();
 }
 
 function resetAdminForm() {
@@ -1434,6 +1513,12 @@ function resetAdminForm() {
     const subcategoria = document.getElementById('admin-subcategoria');
     if (subcategoria) {
         subcategoria.innerHTML = '<option value="">Sin subcategoría</option>';
+    }
+    
+    // Resetear selector de imagen a la opción por defecto
+    const imagenSelect = document.getElementById('admin-imagen');
+    if (imagenSelect) {
+        imagenSelect.value = '';
     }
 }
 
@@ -1457,28 +1542,23 @@ function handleAdminCategoryChange(e) {
 }
 
 function handleImagePreview(e) {
-    const url = e.target.value;
+    const selectedImage = e.target.value;
     const preview = document.getElementById('image-preview');
     const previewImg = document.getElementById('preview-img');
     
-    if (url && isValidUrl(url)) {
-        previewImg.src = url;
+    if (selectedImage && selectedImage !== '') {
+        previewImg.src = selectedImage;
         preview.style.display = 'block';
+        console.log('🔧 Preview de imagen:', selectedImage);
         
+        // Manejar error de carga de imagen
         previewImg.onerror = () => {
+            console.warn('⚠️ No se pudo cargar la imagen:', selectedImage);
             preview.style.display = 'none';
         };
     } else {
         preview.style.display = 'none';
-    }
-}
-
-function isValidUrl(str) {
-    try {
-        new URL(str);
-        return true;
-    } catch {
-        return false;
+        console.log('🔧 Sin imagen seleccionada');
     }
 }
 
@@ -1488,12 +1568,11 @@ function handleAdminFormSubmit(e) {
     const formData = new FormData(e.target);
     const imagenValue = document.getElementById('admin-imagen').value;
     
-    const newProduct = {
-        id: Date.now(), // ID único basado en timestamp
+    const productData = {
         nombre: document.getElementById('admin-nombre').value,
         descripcion: document.getElementById('admin-descripcion').value,
         precio: parseFloat(document.getElementById('admin-precio').value),
-        imagen: imagenValue || 'images/placeholder-product.svg', // Imagen por defecto si está vacía
+        imagen: imagenValue || 'images/placeholder-product.jpg', // Usar placeholder local si no se selecciona imagen
         categoria: document.getElementById('admin-categoria').value,
         subcategoria: document.getElementById('admin-subcategoria').value || null,
         nuevo: document.getElementById('admin-nuevo').checked,
@@ -1504,48 +1583,97 @@ function handleAdminFormSubmit(e) {
     // Agregar precio original si se especifica
     const precioOriginal = document.getElementById('admin-precio-original').value;
     if (precioOriginal && parseFloat(precioOriginal) > 0) {
-        newProduct.precioOriginal = parseFloat(precioOriginal);
+        productData.precioOriginal = parseFloat(precioOriginal);
     }
     
-    // Validaciones (sin imagen obligatoria)
-    if (!newProduct.nombre || !newProduct.descripcion || !newProduct.precio || !newProduct.categoria) {
-        mostrarNotificacion('Por favor completa todos los campos obligatorios (nombre, descripción, precio, categoría)');
+    // Validaciones
+    if (!productData.nombre || !productData.descripcion || !productData.precio || !productData.categoria) {
+        mostrarNotificacion('Por favor completa todos los campos obligatorios (nombre, descripción, precio, categoría)', 'error');
         return;
     }
     
-    // Agregar producto al array completo
-    productos.push(newProduct);
+    if (editingProductId) {
+        // Modo edición: actualizar producto existente
+        const productIndex = productos.findIndex(p => p.id === editingProductId);
+        if (productIndex !== -1) {
+            // Mantener el ID original y actualizar los datos
+            productData.id = editingProductId;
+            productos[productIndex] = productData;
+            
+            console.log('🔧 Producto actualizado:', productData);
+            mostrarNotificacion(`Producto "${productData.nombre}" actualizado exitosamente`, 'success');
+        }
+    } else {
+        // Modo creación: agregar nuevo producto
+        productData.id = Date.now(); // ID único basado en timestamp
+        productos.push(productData);
+        
+        console.log('🔧 Nuevo producto creado:', productData);
+        mostrarNotificacion(`Producto "${productData.nombre}" agregado exitosamente`, 'success');
+    }
     
-    // Guardar solo productos NUEVOS en localStorage (no los del JSON base)
-    const productosAdmin = localStorage.getItem('mva_admin_products');
-    let productosAdminArray = productosAdmin ? JSON.parse(productosAdmin) : [];
-    productosAdminArray.push(newProduct);
-    localStorage.setItem('mva_admin_products', JSON.stringify(productosAdminArray));
+    // Guardar todos los productos en localStorage
+    localStorage.setItem('productos', JSON.stringify(productos));
     
     // Actualizar vista
     renderProductos();
     updateProductCounts();
+    updateAdminCounter();
     
-    // Cerrar modal
+    // Cerrar modal y resetear
     closeAdminModalHandler();
+    resetAdminForm();
+    editingProductId = null;
     
-    mostrarNotificacion(`Producto "${newProduct.nombre}" agregado exitosamente`);
+    // Cambiar el título del modal de vuelta a "Agregar"
+    const modalTitle = document.getElementById('admin-modal-title');
+    if (modalTitle) {
+        modalTitle.textContent = 'Agregar Nuevo Producto';
+    }
 }
 
 function exportToJSON() {
-    const dataStr = JSON.stringify(productos, null, 2);
-    const dataBlob = new Blob([dataStr], {type: 'application/json'});
-    
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(dataBlob);
-    link.download = 'productos-mva-completo.json';
-    link.click();
-    
-    // Mostrar información detallada
-    const productosBase = productos.length - (JSON.parse(localStorage.getItem('mva_admin_products') || '[]')).length;
-    const productosAdmin = JSON.parse(localStorage.getItem('mva_admin_products') || '[]').length;
-    
-    mostrarNotificacion(`JSON exportado: ${productos.length} productos total (${productosBase} base + ${productosAdmin} admin)`);
+    try {
+        // Crear objeto con metadatos y productos
+        const exportData = {
+            metadata: {
+                exportDate: new Date().toISOString(),
+                totalProducts: productos.length,
+                version: "1.0",
+                source: "MVA Catálogo Admin Panel"
+            },
+            productos: productos
+        };
+        
+        const dataStr = JSON.stringify(exportData, null, 2);
+        const dataBlob = new Blob([dataStr], {type: 'application/json'});
+        
+        // Crear enlace de descarga con timestamp
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(dataBlob);
+        
+        const now = new Date();
+        const timestamp = now.toISOString().slice(0, 19).replace(/:/g, '-');
+        link.download = `mva-productos-completo-${timestamp}.json`;
+        
+        // Ejecutar descarga
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+        
+        // Mostrar información detallada
+        mostrarNotificacion(`JSON exportado exitosamente: ${productos.length} productos totales (incluyendo editados)`, 'success');
+        
+        console.log('Exportación completada:', {
+            totalProductos: productos.length,
+            fecha: now.toISOString()
+        });
+        
+    } catch (error) {
+        console.error('Error al exportar:', error);
+        mostrarNotificacion('Error al exportar productos', 'error');
+    }
 }
 
 function getAdminInfo() {
@@ -1672,4 +1800,155 @@ function addHeaderTransition() {
     if (header) {
         header.style.transition = 'transform 0.3s ease-in-out';
     }
+}
+
+// Funciones de administración para edición de productos
+function editarProducto(productId) {
+    if (!isAdminMode) {
+        console.warn('Acceso denegado: Solo disponible en modo admin');
+        return;
+    }
+    
+    const producto = productos.find(p => p.id === productId);
+    if (!producto) {
+        console.error('Producto no encontrado');
+        mostrarNotificacion('Error: Producto no encontrado');
+        return;
+    }
+
+    editingProductId = productId;
+    console.log('🔧 Editando producto:', producto);
+    
+    // Abrir el modal primero
+    openAdminModal();
+    
+    // Cambiar el título del modal
+    const modalTitle = document.getElementById('admin-modal-title');
+    if (modalTitle) {
+        modalTitle.textContent = 'Editar Producto';
+    }
+
+    // Esperar un momento para que el modal se abra completamente
+    setTimeout(() => {
+        // Llenar el formulario con los datos existentes
+        const nombreField = document.getElementById('admin-nombre');
+        const precioField = document.getElementById('admin-precio');
+        const precioOriginalField = document.getElementById('admin-precio-original');
+        const categoriaField = document.getElementById('admin-categoria');
+        const descripcionField = document.getElementById('admin-descripcion');
+        const imagenField = document.getElementById('admin-imagen');
+        const tallasField = document.getElementById('admin-tallas');
+        const coloresField = document.getElementById('admin-colores');
+        const nuevoField = document.getElementById('admin-nuevo');
+
+        // Llenar todos los campos con validación
+        if (nombreField) nombreField.value = producto.nombre || '';
+        if (precioField) precioField.value = producto.precio || '';
+        if (precioOriginalField) precioOriginalField.value = producto.precioOriginal || '';
+        if (categoriaField) categoriaField.value = producto.categoria || '';
+        if (descripcionField) descripcionField.value = producto.descripcion || '';
+        if (imagenField) imagenField.value = producto.imagen || '';
+        if (tallasField) tallasField.value = producto.tallas ? producto.tallas.join(', ') : '';
+        if (coloresField) coloresField.value = producto.colores ? producto.colores.join(', ') : '';
+        if (nuevoField) nuevoField.checked = producto.nuevo || false;
+
+        // Cargar subcategorías y seleccionar la actual
+        if (producto.categoria && categoriaField) {
+            // Disparar el evento change para cargar subcategorías
+            const event = new Event('change', { bubbles: true });
+            categoriaField.dispatchEvent(event);
+            
+            // Seleccionar la subcategoría después de cargar las opciones
+            setTimeout(() => {
+                const subcategoriaSelect = document.getElementById('admin-subcategoria');
+                if (subcategoriaSelect && producto.subcategoria) {
+                    subcategoriaSelect.value = producto.subcategoria;
+                    console.log('🔧 Subcategoría seleccionada:', producto.subcategoria);
+                }
+            }, 150);
+        }
+
+        // Mostrar preview de imagen si existe
+        if (producto.imagen) {
+            const preview = document.getElementById('image-preview');
+            const previewImg = document.getElementById('preview-img');
+            if (preview && previewImg) {
+                previewImg.src = getValidImageSrc(producto.imagen);
+                preview.style.display = 'block';
+                console.log('🔧 Preview de imagen mostrado');
+            }
+        }
+
+        console.log('🔧 Formulario pre-llenado con datos del producto');
+        mostrarNotificacion('Producto cargado para edición');
+    }, 100);
+}
+
+function eliminarProducto(productId) {
+    if (!isAdminMode) {
+        console.warn('Acceso denegado: Solo disponible en modo admin');
+        return;
+    }
+    
+    const producto = productos.find(p => p.id === productId);
+    if (!producto) {
+        console.error('Producto no encontrado');
+        return;
+    }
+
+    if (confirm(`¿Estás seguro de que quieres eliminar el producto "${producto.nombre}"? Esta acción no se puede deshacer.`)) {
+        // Eliminar del array de productos
+        productos = productos.filter(p => p.id !== productId);
+        
+        // Guardar en localStorage
+        localStorage.setItem('productos', JSON.stringify(productos));
+        
+        // Actualizar la visualización
+        renderProductos();
+        updateProductCounts();
+        updateAdminCounter();
+        
+        console.log('Producto eliminado:', producto.nombre);
+        mostrarNotificacion(`Producto "${producto.nombre}" eliminado exitosamente`, 'success');
+    }
+}
+
+function mostrarNotificacion(mensaje, tipo = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${tipo}`;
+    notification.innerHTML = `
+        <i class="fas fa-${tipo === 'success' ? 'check-circle' : tipo === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+        <span>${mensaje}</span>
+    `;
+    
+    // Estilos para la notificación
+    Object.assign(notification.style, {
+        position: 'fixed',
+        top: '20px',
+        right: '20px',
+        padding: '15px 20px',
+        background: tipo === 'success' ? '#28a745' : tipo === 'error' ? '#dc3545' : '#17a2b8',
+        color: 'white',
+        borderRadius: '8px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+        zIndex: '10000',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+        animation: 'slideInRight 0.3s ease',
+        maxWidth: '300px',
+        fontSize: '14px'
+    });
+    
+    document.body.appendChild(notification);
+    
+    // Remover después de 3 segundos
+    setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease forwards';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
 }

@@ -2190,3 +2190,200 @@ section.visible {
 .product-item:hover img[src*="placeholder-product.svg"] {
     opacity: 1;
 }
+
+/* ==============================================
+   ESTILOS DE ADMINISTRACIÓN PARA PRODUCTOS
+   ============================================== */
+
+/* Botones de administración en productos */
+.admin-product-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 5px;
+    z-index: 10;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.admin-mode .product-card:hover .admin-product-actions {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.edit-product-btn,
+.delete-product-btn {
+    width: 35px;
+    height: 35px;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+}
+
+.edit-product-btn {
+    background: var(--primary-color);
+    color: white;
+}
+
+.edit-product-btn:hover {
+    background: #1a1a1a;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.delete-product-btn {
+    background: var(--danger);
+    color: white;
+}
+
+.delete-product-btn:hover {
+    background: #c82333;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+}
+
+/* Efectos especiales para modo admin */
+.admin-mode .product-card {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.admin-mode .product-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.admin-mode .product-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    background: linear-gradient(45deg, var(--primary-color), var(--accent-color)) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: exclude;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.admin-mode .product-card:hover::before {
+    opacity: 0.3;
+}
+
+/* Notificaciones */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 300px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.notification.success {
+    background: #28a745;
+    color: white;
+}
+
+.notification.error {
+    background: #dc3545;
+    color: white;
+}
+
+.notification.info {
+    background: #17a2b8;
+    color: white;
+}
+
+/* Ocultar filtros en modo admin */
+.admin-mode .modern-filters {
+    display: none !important;
+}
+
+.admin-mode .filter-toggle {
+    display: none !important;
+}
+
+/* Badge especial para modo admin */
+.admin-mode .admin-badge {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+}
+
+/* Hover mejorado para productos en modo admin */
+.admin-mode .product-card {
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.admin-mode .product-card:hover {
+    border-color: rgba(44, 44, 44, 0.1);
+}
+
+/* Estilos responsivos para botones de admin */
+@media (max-width: 768px) {
+    .admin-product-actions {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .edit-product-btn,
+    .delete-product-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+    }
+}
