@@ -1,197 +1,287 @@
-[
+{
+  "productos": [
     {
-        "id": 1,
-        "nombre": "Conjunto Elegante",
-        "descripcion": "Blazer de corte moderno perfecto para ocasiones formales",
-        "precio": 14.99,
-        "precioOriginal": 20.00,
-        "imagen": "images/conjuntoazul.png",
-        "categoria": "mujer",
-        "subcategoria": "Conjuntos y Enterizos",
-        "nuevo": true,
-        "tallas": ["M", "L"],
-        "colores": ["Azul"]
+      "id": 1,
+      "nombre": "Conjunto Elegante",
+      "descripcion": "Blazer de corte moderno perfecto para ocasiones formales",
+      "precio": 14.99,
+      "precioOriginal": 20,
+      "imagen": "images/conjuntoazul.png",
+      "categoria": "mujer",
+      "subcategoria": "Conjuntos y Enterizos",
+      "nuevo": true,
+      "tallas": [
+        "M",
+        "L"
+      ],
+      "colores": [
+        "Azul"
+      ]
     },
     {
-        "id": 3,
-        "nombre": "Traje de Baño",
-        "descripcion": "Conjunto de baño de dos piezas",
-        "precio": 13.99,
-        "precioOriginal": 19.99,
-        "imagen": "images/vestidorojo.png",
-        "categoria": "mujer",
-        "subcategoria": "Traje de Baño",
-        "nuevo": true,
-        "tallas": ["S", "M", "L"],
-        "colores": ["Negro", "Naranja Oscuro", "Beige"]
+      "id": 3,
+      "nombre": "Traje de Baño",
+      "descripcion": "Conjunto de baño de dos piezas",
+      "precio": 13.99,
+      "precioOriginal": 19.99,
+      "imagen": "images/vestidorojo.png",
+      "categoria": "mujer",
+      "subcategoria": "Traje de Baño",
+      "nuevo": true,
+      "tallas": [
+        "S",
+        "M",
+        "L"
+      ],
+      "colores": [
+        "Negro",
+        "Naranja Oscuro",
+        "Beige"
+      ]
     },
     {
-        "id": 4,
-        "nombre": "Falda Short",
-        "descripcion": "Diseño innovador de falda short, con falda en la parte delantera y short en la parte trasera.",
-        "precio": 8.99,
-        "imagen": "images/falda-short.jpg",
-        "categoria": "mujer",
-        "subcategoria": "faldas",
-        "nuevo": true,
-        "tallas": ["S", "M", "L"],
-        "colores": ["Vino", "Rosa"]
+      "id": 4,
+      "nombre": "Falda Short",
+      "descripcion": "Diseño innovador de falda short, con falda en la parte delantera y short en la parte trasera.",
+      "precio": 8.99,
+      "imagen": "images/falda-short.jpg",
+      "categoria": "mujer",
+      "subcategoria": "faldas",
+      "nuevo": true,
+      "tallas": [
+        "S",
+        "M",
+        "L"
+      ],
+      "colores": [
+        "Vino",
+        "Rosa"
+      ]
     },
     {
-        "id": 5,
-        "nombre": "Conjunto Deportivo",
-        "descripcion": "Blusa manga larga y pantalón deportivo, ideal para hacer ejercicio.",
-        "precio": 11.99,
-        "imagen": "images/conjunto deportivo.jpg",
-        "categoria": "mujer",
-        "subcategoria": "Conjuntos y Enterizos",
-        "nuevo": true,
-        "tallas": ["S", "M"],
-        "colores": ["Negro"]
+      "id": 5,
+      "nombre": "Conjunto Deportivo",
+      "descripcion": "Blusa manga larga y pantalón deportivo, ideal para hacer ejercicio.",
+      "precio": 11.99,
+      "imagen": "images/conjunto deportivo.jpg",
+      "categoria": "mujer",
+      "subcategoria": "Conjuntos y Enterizos",
+      "nuevo": true,
+      "tallas": [
+        "S",
+        "M"
+      ],
+      "colores": [
+        "Negro"
+      ]
     },
     {
-        "id": 6,
-        "nombre": "Tops",
-        "descripcion": "Top con lazo en la parte delantera, ideal para ocasiones especiales.",
-        "precio": 7.99,
-        "imagen": "images/blusacoreana.jpg",
-        "categoria": "mujer",
-        "subcategoria": "Tops",
-        "nuevo": false,
-        "tallas": ["XS", "S"],
-        "colores": ["Gris", "Blanco"]
+      "id": 6,
+      "nombre": "Tops",
+      "descripcion": "Top con lazo en la parte delantera, ideal para ocasiones especiales.",
+      "precio": 7.99,
+      "imagen": "images/blusacoreana.jpg",
+      "categoria": "mujer",
+      "subcategoria": "Tops",
+      "nuevo": false,
+      "tallas": [
+        "XS",
+        "S"
+      ],
+      "colores": [
+        "Gris",
+        "Blanco"
+      ]
     },
     {
-        "id": 7,
-        "nombre": "Conjunto Casual",
-        "descripcion": "Top y falda a juego, combina estilo y comodidad.",
-        "precio": 9.99,
-        "imagen": "images/conjunto-casual.jpg",
-        "categoria": "mujer",
-        "subcategoria": "Conjuntos y Enterizos",
-        "nuevo": true,
-        "tallas": ["M", "L", "XL"],
-        "colores": ["Blanco", "Rosado"]
+      "id": 7,
+      "nombre": "Conjunto Casual",
+      "descripcion": "Top y falda a juego, combina estilo y comodidad.",
+      "precio": 9.99,
+      "imagen": "images/conjunto-casual.jpg",
+      "categoria": "mujer",
+      "subcategoria": "Conjuntos y Enterizos",
+      "nuevo": true,
+      "tallas": [
+        "M",
+        "L",
+        "XL"
+      ],
+      "colores": [
+        "Blanco",
+        "Rosado"
+      ]
     },
     {
-        "id": 8,
-        "nombre": "Short",
-        "descripcion": "Short de tela gruesa y de alta calidad, diseñado con cinturón para un ajuste elegante y confortable.",
-        "precio": 11.99,
-        "imagen": "images/shortcrema.jpg",
-        "categoria": "mujer",
-        "subcategoria": "Short",
-        "nuevo": true,
-        "tallas": ["M"],
-        "colores": ["Caqui"]
+      "id": 8,
+      "nombre": "Short",
+      "descripcion": "Short de tela gruesa y de alta calidad, diseñado con cinturón para un ajuste elegante y confortable.",
+      "precio": 11.99,
+      "imagen": "images/shortcrema.jpg",
+      "categoria": "mujer",
+      "subcategoria": "Short",
+      "nuevo": true,
+      "tallas": [
+        "M"
+      ],
+      "colores": [
+        "Caqui"
+      ]
     },
     {
-        "id": 9,
-        "nombre": "Body",
-        "descripcion": "Body para todo tipo de ocasiones, con un diseño que marcará tu figura dando ese toque escencial que buscas.",
-        "precio": 7.99,
-        "imagen": "images/principal-removebg-preview.png",
-        "categoria": "mujer",
-        "subcategoria": "Body",
-        "nuevo": true,
-        "tallas": ["S", "M", "L"],
-        "colores": ["Mostaza"]
+      "id": 9,
+      "nombre": "Body",
+      "descripcion": "Body para todo tipo de ocasiones, con un diseño que marcará tu figura dando ese toque escencial que buscas.",
+      "precio": 7.99,
+      "imagen": "images/principal-removebg-preview.png",
+      "categoria": "mujer",
+      "subcategoria": "Body",
+      "nuevo": true,
+      "tallas": [
+        "S",
+        "M",
+        "L"
+      ],
+      "colores": [
+        "Mostaza"
+      ]
     },
     {
-        "id": 10,
-        "nombre": "Enterizo",
-        "descripcion": "Enterizo de una sola pieza, diseñado para brindar comodidad y estilo en una prenda práctica y elegante.",
-        "precio": 11.99,
-        "imagen": "images/placeholder-product.jpg",
-        "categoria": "mujer",
-        "subcategoria": "Conjuntos y Enterizos",
-        "nuevo": true,
-        "tallas": ["M", "L"],
-        "colores": ["Negro", "Café", "Rosado"]
+      "nombre": "Enterizo",
+      "descripcion": "Enterizo de una sola pieza, diseñado para brindar comodidad y estilo en una prenda práctica y elegante.",
+      "precio": 11.99,
+      "imagen": "images/placeholder-product.jpg",
+      "categoria": "mujer",
+      "subcategoria": null,
+      "nuevo": true,
+      "tallas": [
+        "M",
+        "L"
+      ],
+      "colores": [
+        "Negro",
+        "Café",
+        "Rosado"
+      ],
+      "id": 10
     },
     {
-        "id": 11,
-        "nombre": "Pijama",
-        "descripcion": "Conjunto de pijama de dos piezas.",
-        "precio": 8.99,
-        "imagen": "images/pijama.jpg",
-        "categoria": "mujer",
-        "subcategoria": "Conjuntos y Enterizos",
-        "nuevo": true,
-        "tallas": ["M", "L"],
-        "colores": ["Rosado"]
+      "id": 11,
+      "nombre": "Pijama",
+      "descripcion": "Conjunto de pijama de dos piezas.",
+      "precio": 8.99,
+      "imagen": "images/pijama.jpg",
+      "categoria": "mujer",
+      "subcategoria": "Conjuntos y Enterizos",
+      "nuevo": true,
+      "tallas": [
+        "M",
+        "L"
+      ],
+      "colores": [
+        "Rosado"
+      ]
     },
     {
-        "id": 12,
-        "nombre": "Top",
-        "descripcion": "Top estilo coreano con estampado llamativo",
-        "precio": 7.99,
-        "imagen": "images/topcoreana.jpg",
-        "categoria": "mujer",
-        "subcategoria": "Tops",
-        "nuevo": true,
-        "tallas": ["XS", "S"],
-        "colores": ["Negro"]
+      "id": 12,
+      "nombre": "Top",
+      "descripcion": "Top estilo coreano con estampado llamativo",
+      "precio": 7.99,
+      "imagen": "images/topcoreana.jpg",
+      "categoria": "mujer",
+      "subcategoria": "Tops",
+      "nuevo": true,
+      "tallas": [
+        "XS",
+        "S"
+      ],
+      "colores": [
+        "Negro"
+      ]
     },
     {
-        "id": 13,
-        "nombre": "Conjunto Casual",
-        "descripcion": "Conjunto de dos piezas, con blazer y short a juego, ideal para un look casual.",
-        "precio": 14.99,
-        "imagen": "images/conjuntogris.jpg",
-        "categoria": "mujer",
-        "subcategoria": "Conjuntos y Enterizos",
-        "nuevo": true,
-        "tallas": ["L"],
-        "colores": ["Gris"]
+      "nombre": "Conjunto Casual",
+      "descripcion": "Conjunto de dos piezas, con blazer y short a juego, ideal para un look casual.",
+      "precio": 14.99,
+      "imagen": "images/conjuntogris.jpg",
+      "categoria": "mujer",
+      "subcategoria": null,
+      "nuevo": true,
+      "tallas": [
+        "L"
+      ],
+      "colores": [
+        "Gris"
+      ],
+      "id": 13
     },
     {
-        "id": 14,
-        "nombre": "Blusa",
-        "descripcion": "Blusa de tiras confeccionada en tela alicrada que se adapta al cuerpo.",
-        "precio": 6.99,
-        "imagen": "images/chaqueta-cuero.jpg",
-        "categoria": "mujer",
-        "subcategoria": "Blusas",
-        "nuevo": true,
-        "tallas": ["S", "M"],
-        "colores": ["Azul Marino"]
+      "id": 14,
+      "nombre": "Blusa",
+      "descripcion": "Blusa de tiras confeccionada en tela alicrada que se adapta al cuerpo.",
+      "precio": 6.99,
+      "imagen": "images/chaqueta-cuero.jpg",
+      "categoria": "mujer",
+      "subcategoria": "Blusas",
+      "nuevo": true,
+      "tallas": [
+        "S",
+        "M"
+      ],
+      "colores": [
+        "Azul Marino"
+      ]
     },
     {
-        "id": 15,
-        "nombre": "Body Flor",
-        "descripcion": "Vestido de noche elegante con detalles brillantes, ideal para eventos formales.",
-        "precio": 11.99,
-        "imagen": "images/bodyfucsia.jpg",
-        "categoria": "mujer",
-        "subcategoria": "Body",
-        "nuevo": true,
-        "tallas": ["S", "M"],
-        "colores": ["Fucsia"]
+      "nombre": "Body Flor",
+      "descripcion": "Vestido de noche elegante con detalles brillantes, ideal para eventos formales.",
+      "precio": 11.99,
+      "imagen": "images/bodyfucsia.jpg",
+      "categoria": "mujer",
+      "subcategoria": null,
+      "nuevo": true,
+      "tallas": [
+        "S",
+        "M"
+      ],
+      "colores": [
+        "Fucsia"
+      ],
+      "id": 15
     },
     {
-        "id": 16,
-        "nombre": "Blusa Asimétrica",
-        "descripcion": "Blusa asimétrica con rosa",
-        "precio": 11.99,
-        "imagen": "images/blusacoral_rosa.jpg",
-        "categoria": "mujer",
-        "subcategoria": "Blusas",
-        "nuevo": true,
-        "tallas": ["S"],
-        "colores": ["Coral"]
+      "nombre": "Blusa Asimétrica",
+      "descripcion": "Blusa asimétrica con rosa",
+      "precio": 11.99,
+      "imagen": "images/blusacoral_rosa.jpg",
+      "categoria": "mujer",
+      "subcategoria": "blusas",
+      "nuevo": true,
+      "tallas": [
+        "S"
+      ],
+      "colores": [
+        "Coral"
+      ],
+      "id": 1754422233666
     },
     {
-        "id": 17,
-        "nombre": "Vestido Corto",
-        "descripcion": "Vestido corto con corte en V",
-        "precio": 9.99,
-        "precioOriginal": 14.99,
-        "imagen": "images/vestidoconrayas.jpg",
-        "categoria": "mujer",
-        "subcategoria": "Vestidos",
-        "nuevo": true,
-        "tallas": ["S", "M"],
-        "colores": ["Beige"]
+      "nombre": "Vestido Corto",
+      "descripcion": "Vestido corto con corte en V",
+      "precio": 9.99,
+      "imagen": "images/vestidoconrayas.jpg",
+      "categoria": "mujer",
+      "subcategoria": "vestido",
+      "nuevo": true,
+      "tallas": [
+        "S",
+        "M"
+      ],
+      "colores": [
+        "Beige"
+      ],
+      "precioOriginal": 14.99,
+      "id": 1754422385335
     }
-]
+  ]
+}
