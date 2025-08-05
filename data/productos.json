@@ -150,9 +150,9 @@
       "nombre": "Enterizo",
       "descripcion": "Enterizo de una sola pieza, diseñado para brindar comodidad y estilo en una prenda práctica y elegante.",
       "precio": 11.99,
-      "imagen": "images/enterizojpg",
+      "imagen": "images/enterizo.jpg",
       "categoria": "mujer",
-      "subcategoria": null,
+      "subcategoria": "Conjuntos y Enterizos",
       "nuevo": true,
       "tallas": [
         "M",
