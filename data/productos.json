@@ -19,14 +19,12 @@
       ]
     },
     {
-      "id": 3,
       "nombre": "Traje de Baño",
       "descripcion": "Conjunto de baño de dos piezas",
       "precio": 13.99,
-      "precioOriginal": 19.99,
-      "imagen": "images/vestidorojo.png",
+      "imagen": "images/traje_de_baño.jpg",
       "categoria": "mujer",
-      "subcategoria": "Traje de Baño",
+      "subcategoria": null,
       "nuevo": true,
       "tallas": [
         "S",
@@ -34,10 +32,11 @@
         "L"
       ],
       "colores": [
-        "Negro",
         "Naranja Oscuro",
         "Beige"
-      ]
+      ],
+      "precioOriginal": 19.99,
+      "id": 3
     },
     {
       "id": 4,
@@ -129,14 +128,13 @@
       ]
     },
     {
-      "id": 9,
       "nombre": "Body",
       "descripcion": "Body para todo tipo de ocasiones, con un diseño que marcará tu figura dando ese toque escencial que buscas.",
       "precio": 7.99,
-      "imagen": "images/principal-removebg-preview.png",
+      "imagen": "images/body-negra.jpg",
       "categoria": "mujer",
-      "subcategoria": "Body",
-      "nuevo": true,
+      "subcategoria": "body",
+      "nuevo": false,
       "tallas": [
         "S",
         "M",
@@ -144,15 +142,16 @@
       ],
       "colores": [
         "Mostaza"
-      ]
+      ],
+      "id": 9
     },
     {
       "nombre": "Enterizo",
       "descripcion": "Enterizo de una sola pieza, diseñado para brindar comodidad y estilo en una prenda práctica y elegante.",
       "precio": 11.99,
-      "imagen": "images/enterizo.jpg",
+      "imagen": "images/placeholder-product.jpg",
       "categoria": "mujer",
-      "subcategoria": "Conjuntos y Enterizos",
+      "subcategoria": null,
       "nuevo": true,
       "tallas": [
         "M",
@@ -166,38 +165,38 @@
       "id": 10
     },
     {
-      "id": 11,
       "nombre": "Pijama",
       "descripcion": "Conjunto de pijama de dos piezas.",
       "precio": 8.99,
       "imagen": "images/pijama.jpg",
       "categoria": "mujer",
-      "subcategoria": "Conjuntos y Enterizos",
-      "nuevo": true,
+      "subcategoria": null,
+      "nuevo": false,
       "tallas": [
         "M",
         "L"
       ],
       "colores": [
         "Rosado"
-      ]
+      ],
+      "id": 11
     },
     {
-      "id": 12,
       "nombre": "Top",
       "descripcion": "Top estilo coreano con estampado llamativo",
       "precio": 7.99,
       "imagen": "images/topcoreana.jpg",
       "categoria": "mujer",
-      "subcategoria": "Tops",
-      "nuevo": true,
+      "subcategoria": null,
+      "nuevo": false,
       "tallas": [
         "XS",
         "S"
       ],
       "colores": [
         "Negro"
-      ]
+      ],
+      "id": 12
     },
     {
       "nombre": "Conjunto Casual",
@@ -216,13 +215,12 @@
       "id": 13
     },
     {
-      "id": 14,
       "nombre": "Blusa",
       "descripcion": "Blusa de tiras confeccionada en tela alicrada que se adapta al cuerpo.",
       "precio": 6.99,
       "imagen": "images/blusa_azulmarino.jpg",
       "categoria": "mujer",
-      "subcategoria": "Blusas",
+      "subcategoria": "blusas",
       "nuevo": true,
       "tallas": [
         "S",
@@ -230,15 +228,16 @@
       ],
       "colores": [
         "Azul Marino"
-      ]
+      ],
+      "id": 14
     },
     {
       "nombre": "Body Flor",
-      "descripcion": "Vestido de noche elegante con detalles brillantes, ideal para eventos formales.",
+      "descripcion": "Body ajustado de color rosa fucsia con manga corta y elegante flor decorativa en el pecho, adornada con un cristal brillante. ",
       "precio": 11.99,
       "imagen": "images/bodyfucsia.jpg",
       "categoria": "mujer",
-      "subcategoria": null,
+      "subcategoria": "body",
       "nuevo": true,
       "tallas": [
         "S",
@@ -250,8 +249,8 @@
       "id": 15
     },
     {
-      "nombre": "Blusa Asimétrica",
-      "descripcion": "Blusa asimétrica con rosa",
+      "nombre": "Blusa Flor",
+      "descripcion": "Blusa sin mangas color melocotón con flor decorativa en el pecho, adornada con detalles de perlas doradas. Un diseño femenino y elegante.",
       "precio": 11.99,
       "imagen": "images/blusacoral_rosa.jpg",
       "categoria": "mujer",
@@ -261,13 +260,13 @@
         "S"
       ],
       "colores": [
-        "Coral"
+        "Melocotón"
       ],
       "id": 16
     },
     {
       "nombre": "Vestido Corto",
-      "descripcion": "Vestido corto con corte en V",
+      "descripcion": "Vestido de manga larga en tela suave con rayas horizontales. Escote en V y corte ajustado que resalta la figura. ",
       "precio": 9.99,
       "imagen": "images/vestidoconrayas.jpg",
       "categoria": "mujer",
@@ -282,6 +281,141 @@
       ],
       "precioOriginal": 14.99,
       "id": 17
+    },
+    {
+      "nombre": "Blusa Brisa Cristal",
+      "descripcion": "Blusa azul celeste con tirantes brillantes y detalle frontal de pedrería en caída vertical. ",
+      "precio": 4.99,
+      "imagen": "images/blusa_celeste.jpg",
+      "categoria": "mujer",
+      "subcategoria": "blusas",
+      "nuevo": false,
+      "tallas": [
+        "S",
+        "M"
+      ],
+      "colores": [
+        "Celeste"
+      ],
+      "id": 18
+    },
+    {
+      "nombre": "Short de Niña",
+      "descripcion": "En espera",
+      "precio": 4.99,
+      "imagen": "images/shortdeniña.jpg",
+      "categoria": "mujer",
+      "subcategoria": null,
+      "nuevo": false,
+      "tallas": [],
+      "colores": [
+        "Fucsia"
+      ],
+      "id": 19
+    },
+    {
+      "nombre": "Blusa Rosa Asimétrica",
+      "descripcion": "Blusa femenina de manga larga en un solo hombro, con delicado detalle floral. Material suave y cómodo ideal para ocasiones casuales y elegantes.",
+      "precio": 6.99,
+      "imagen": "images/placeholder-product.jpg",
+      "categoria": "mujer",
+      "subcategoria": "blusas",
+      "nuevo": false,
+      "tallas": [
+        "M"
+      ],
+      "colores": [
+        "Coral"
+      ],
+      "id": 20
+    },
+    {
+      "nombre": "Conjunto Satinado Floral",
+      "descripcion": "Conjunto de pijama de satén en color naranja con delicados detalles florales. Incluye bata larga con encaje en las mangas y short a juego con cintilla. ",
+      "precio": 9.99,
+      "imagen": "images/lenceria.jpg",
+      "categoria": "mujer",
+      "subcategoria": "conjuntos",
+      "nuevo": false,
+      "tallas": [
+        "S",
+        "M"
+      ],
+      "colores": [
+        "Naranja"
+      ],
+      "id": 21
+    },
+    {
+      "nombre": "Top Halter Tejido",
+      "descripcion": "Top tipo halter corto en tejido canalé elástico, color azul eléctrico intenso, con escote en V y aberturas en el abdomen.",
+      "precio": 6.99,
+      "imagen": "images/placeholder-product.jpg",
+      "categoria": "mujer",
+      "subcategoria": "tops",
+      "nuevo": false,
+      "tallas": [
+        "XS",
+        "S",
+        "M"
+      ],
+      "colores": [
+        "Azul"
+      ],
+      "id": 22
+    },
+    {
+      "nombre": "Top Corset “QUEEN”",
+      "descripcion": "Top tipo corset estructurado, con copas preformadas y decoración de pedrería brillante formando la palabra “QUEEN”.",
+      "precio": 4.99,
+      "imagen": "images/placeholder-product.jpg",
+      "categoria": "mujer",
+      "subcategoria": "tops",
+      "nuevo": false,
+      "tallas": [
+        "XS",
+        "S"
+      ],
+      "colores": [
+        "Caramelo",
+        "Verde"
+      ],
+      "id": 23
+    },
+    {
+      "nombre": "Top Floral Bliss",
+      "descripcion": "Top coral con flor 3D en el pecho y tiras doradas, perfecto para un look vibrante y elegante.",
+      "precio": 6.99,
+      "imagen": "images/placeholder-product.jpg",
+      "categoria": "mujer",
+      "subcategoria": "blusas",
+      "nuevo": false,
+      "tallas": [
+        "S",
+        "M"
+      ],
+      "colores": [
+        "Naranja",
+        "Mostaza"
+      ],
+      "id": 24
+    },
+    {
+      "nombre": "Top",
+      "descripcion": "en espera",
+      "precio": 4.99,
+      "imagen": "images/placeholder-product.jpg",
+      "categoria": "mujer",
+      "subcategoria": "tops",
+      "nuevo": false,
+      "tallas": [
+        "XS",
+        "S"
+      ],
+      "colores": [
+        "Negro"
+      ],
+      "id": 25
     }
   ]
 }
