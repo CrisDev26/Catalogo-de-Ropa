@@ -496,6 +496,44 @@
         </div>
     </div>
 
+    <!-- Cache Clear Modal -->
+    <div id="cache-clear-modal" class="admin-modal" style="display: none;">
+        <div class="admin-modal-content">
+            <div class="admin-modal-header">
+                <h3><i class="fas fa-database"></i> Gestión de Caché</h3>
+            </div>
+            <div class="admin-modal-body">
+                <div class="cache-info">
+                    <p><i class="fas fa-info-circle"></i> Se detectó una recarga de página.</p>
+                    <p>¿Qué deseas hacer con los datos guardados localmente?</p>
+                    
+                    <div class="cache-stats" id="cache-stats">
+                        <!-- Información del caché se mostrará aquí -->
+                    </div>
+                </div>
+                
+                <div class="cache-actions">
+                    <button class="keep-cache-btn" id="keep-cache-btn">
+                        <i class="fas fa-save"></i>
+                        Mantener Cambios
+                        <small>Conservar productos editados/agregados</small>
+                    </button>
+                    
+                    <button class="clear-cache-btn" id="clear-cache-btn">
+                        <i class="fas fa-trash-alt"></i>
+                        Limpiar Caché
+                        <small>Volver al estado original del JSON</small>
+                    </button>
+                    
+                    <button class="cancel-cache-btn" id="cancel-cache-btn">
+                        <i class="fas fa-times"></i>
+                        Continuar Sin Cambios
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

@@ -7,6 +7,76 @@ let filtroActivo = 'all';
 let productosVisible = 6;
 let isAdminMode = false;
 let editingProductId = null; // Variable para controlar el producto en edición
+let lastLoadTime = localStorage.getItem('lastLoadTime');
+let pageReloadDetected = false;
+
+// Detectar recarga de página
+function detectPageReload() {
+    const currentTime = Date.now();
+    const timeDiff = currentTime - (lastLoadTime || 0);
+    
+    // Si han pasado menos de 5 segundos desde la última carga, es una recarga
+    if (lastLoadTime && timeDiff < 5000) {
+        pageReloadDetected = true;
+    }
+    
+    localStorage.setItem('lastLoadTime', currentTime);
+    return pageReloadDetected;
+}
+
+// Mostrar modal de gestión de caché
+function showCacheManagementModal() {
+    const modal = document.getElementById('cache-clear-modal');
+    const cacheStats = document.getElementById('cache-stats');
+    
+    // Obtener estadísticas del caché
+    const storedProducts = localStorage.getItem('productos');
+    const storedProductsCount = storedProducts ? JSON.parse(storedProducts).length : 0;
+    const cacheSize = storedProducts ? (storedProducts.length / 1024).toFixed(2) : 0;
+    
+    cacheStats.innerHTML = `
+        <div class="cache-stat-item">
+            <span><i class="fas fa-box"></i> Productos en caché:</span>
+            <strong>${storedProductsCount}</strong>
+        </div>
+        <div class="cache-stat-item">
+            <span><i class="fas fa-memory"></i> Tamaño del caché:</span>
+            <strong>${cacheSize} KB</strong>
+        </div>
+        <div class="cache-stat-item">
+            <span><i class="fas fa-clock"></i> Última actualización:</span>
+            <strong>${new Date(parseInt(lastLoadTime)).toLocaleString()}</strong>
+        </div>
+    `;
+    
+    modal.style.display = 'flex';
+}
+
+// Manejar botones del modal de caché
+function initCacheManagement() {
+    const modal = document.getElementById('cache-clear-modal');
+    const keepBtn = document.getElementById('keep-cache-btn');
+    const clearBtn = document.getElementById('clear-cache-btn');
+    const cancelBtn = document.getElementById('cancel-cache-btn');
+    
+    keepBtn.addEventListener('click', () => {
+        console.log('Usuario eligió mantener caché');
+        modal.style.display = 'none';
+    });
+    
+    clearBtn.addEventListener('click', () => {
+        // Limpiar localStorage
+        localStorage.removeItem('productos');
+        console.log('Caché limpiado - recargando página...');
+        modal.style.display = 'none';
+        // Recargar página para cargar datos frescos
+        window.location.reload();
+    });
+    
+    cancelBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+}
 
 // Variables de filtros modernos
 let filtros = {
@@ -112,8 +182,21 @@ window.addEventListener('click', (e) => {
 
 // Inicialización
 function init() {
+    // Detectar recarga de página
+    const isReload = detectPageReload();
+    
     // Verificar modo admin
     checkAdminMode();
+    
+    // Si es una recarga y hay datos en localStorage, mostrar modal
+    if (isReload && localStorage.getItem('productos')) {
+        setTimeout(() => {
+            showCacheManagementModal();
+        }, 1000); // Esperar un segundo para que cargue la interfaz
+    }
+    
+    // Inicializar gestión de caché
+    initCacheManagement();
     
     // Ocultar loader después de 2 segundos
     setTimeout(() => {
