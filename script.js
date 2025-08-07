@@ -188,11 +188,19 @@ function init() {
     // Verificar modo admin
     checkAdminMode();
     
-    // Si es una recarga y hay datos en localStorage, mostrar modal
+    // Lógica de manejo del localStorage según el modo
     if (isReload && localStorage.getItem('productos')) {
-        setTimeout(() => {
-            showCacheManagementModal();
-        }, 1000); // Esperar un segundo para que cargue la interfaz
+        if (!isAdminMode) {
+            // Si NO está en modo admin, limpiar localStorage automáticamente
+            console.log('🔄 Página recargada fuera del modo admin - Limpiando caché automáticamente...');
+            localStorage.removeItem('productos');
+            localStorage.removeItem('lastLoadTime');
+        } else {
+            // Si está en modo admin, mostrar modal para elegir
+            setTimeout(() => {
+                showCacheManagementModal();
+            }, 1000); // Esperar un segundo para que cargue la interfaz
+        }
     }
     
     // Inicializar gestión de caché
