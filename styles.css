@@ -478,6 +478,76 @@ section.visible {
     transform: translateY(-2px);
 }
 
+/* Marca de agua "Próximamente" */
+.coming-soon-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-15deg);
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.95) 0%, rgba(255, 165, 0, 0.95) 100%);
+    color: #fff;
+    padding: 1rem 2.5rem;
+    border-radius: 30px;
+    font-weight: 900;
+    font-size: 1.2rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    box-shadow: 
+        0 8px 25px rgba(255, 193, 7, 0.5),
+        0 0 0 3px rgba(255, 255, 255, 0.9),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(8px);
+    z-index: 15;
+    animation: pulseGlow 2.5s infinite ease-in-out;
+    text-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.5),
+        0 0 10px rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    white-space: nowrap;
+}
+
+@keyframes pulseGlow {
+    0% {
+        transform: translate(-50%, -50%) rotate(-15deg) scale(1);
+        box-shadow: 
+            0 8px 25px rgba(255, 193, 7, 0.5),
+            0 0 0 3px rgba(255, 255, 255, 0.9),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+    50% {
+        transform: translate(-50%, -50%) rotate(-15deg) scale(1.08);
+        box-shadow: 
+            0 12px 35px rgba(255, 193, 7, 0.7),
+            0 0 0 3px rgba(255, 255, 255, 1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.5),
+            0 0 20px rgba(255, 193, 7, 0.4);
+    }
+    100% {
+        transform: translate(-50%, -50%) rotate(-15deg) scale(1);
+        box-shadow: 
+            0 8px 25px rgba(255, 193, 7, 0.5),
+            0 0 0 3px rgba(255, 255, 255, 0.9),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+}
+
+/* Responsive para marca de agua */
+@media (max-width: 768px) {
+    .coming-soon-watermark {
+        font-size: 1rem;
+        padding: 0.8rem 2rem;
+        letter-spacing: 2px;
+    }
+}
+
+@media (max-width: 480px) {
+    .coming-soon-watermark {
+        font-size: 0.9rem;
+        padding: 0.7rem 1.8rem;
+        letter-spacing: 1.5px;
+    }
+}
+
 /* Products */
 .products {
     padding: 5rem 0;
