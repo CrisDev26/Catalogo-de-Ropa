@@ -363,10 +363,16 @@
                     <p><i class="fas fa-info-circle"></i> Métodos de pago disponibles próximamente</p>
                     <p class="contact-note">Por ahora, contáctanos por WhatsApp para finalizar tu compra</p>
                 </div>
-                <a href="https://w.app/rvwlnx" target="_blank" class="checkout-btn whatsapp-checkout">
-                    <i class="fab fa-whatsapp"></i>
-                    Contactar por WhatsApp
-                </a>
+                <div class="cart-actions">
+                    <button onclick="generarPDFCarrito()" class="pdf-btn">
+                        <i class="fas fa-file-pdf"></i>
+                        Generar PDF
+                    </button>
+                    <a href="https://w.app/rvwlnx" target="_blank" class="checkout-btn whatsapp-checkout">
+                        <i class="fab fa-whatsapp"></i>
+                        Contactar por WhatsApp
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -539,6 +545,65 @@
         </div>
     </div>
 
+    <!-- Modal de Selección de Talla y Color -->
+    <div id="selectionModal" class="modal" style="display: none;">
+        <div class="modal-content selection-modal">
+            <div class="modal-header">
+                <h3 id="modalProductName">Seleccionar opciones</h3>
+                <span class="close-modal" onclick="cerrarModalSeleccion()">&times;</span>
+            </div>
+            
+            <div class="modal-body">
+                <div class="product-preview">
+                    <img id="modalProductImage" src="" alt="Producto">
+                    <div class="product-info">
+                        <h4 id="modalProductTitle"></h4>
+                        <p class="price" id="modalProductPrice"></p>
+                    </div>
+                </div>
+                
+                <div class="selection-options">
+                    <div class="option-group" id="tallaGroup" style="display: none;">
+                        <label class="option-label">Talla:</label>
+                        <div class="option-buttons" id="tallaOptions">
+                            <!-- Tallas se cargarán dinámicamente -->
+                        </div>
+                    </div>
+                    
+                    <div class="option-group" id="colorGroup" style="display: none;">
+                        <label class="option-label">Color:</label>
+                        <div class="option-buttons" id="colorOptions">
+                            <!-- Colores se cargarán dinámicamente -->
+                        </div>
+                    </div>
+                    
+                    <div class="quantity-group">
+                        <label class="option-label">Cantidad:</label>
+                        <div class="quantity-controls">
+                            <button type="button" onclick="cambiarCantidad(-1)">-</button>
+                            <input type="number" id="modalQuantity" value="1" min="1" max="10">
+                            <button type="button" onclick="cambiarCantidad(1)">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="cerrarModalSeleccion()">Cancelar</button>
+                <button class="btn-primary" onclick="confirmarAgregarAlCarrito()" id="btnConfirmarAgregar">
+                    Agregar al Carrito
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- jsPDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- PDF Generator -->
+    <script src="pdf-generator.js"></script>
+    
+    <!-- Main Script -->
     <script src="script.js"></script>
 </body>
 </html>

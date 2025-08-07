@@ -15,9 +15,17 @@ function detectPageReload() {
     const currentTime = Date.now();
     const timeDiff = currentTime - (lastLoadTime || 0);
     
+    console.log('🕐 Detección de recarga de página:');
+    console.log('   - Tiempo actual:', new Date(currentTime).toLocaleTimeString());
+    console.log('   - Última carga:', lastLoadTime ? new Date(parseInt(lastLoadTime)).toLocaleTimeString() : 'Primera vez');
+    console.log('   - Diferencia:', timeDiff + 'ms');
+    
     // Si han pasado menos de 5 segundos desde la última carga, es una recarga
     if (lastLoadTime && timeDiff < 5000) {
         pageReloadDetected = true;
+        console.log('✅ RECARGA DE PÁGINA DETECTADA (menos de 5 segundos)');
+    } else {
+        console.log('📄 Primera carga o carga después de mucho tiempo');
     }
     
     localStorage.setItem('lastLoadTime', currentTime);
@@ -181,7 +189,10 @@ window.addEventListener('click', (e) => {
 });
 
 // Inicialización
-function init() {
+async function init() {
+    console.log('🚀 INICIANDO APLICACIÓN MVA');
+    console.log('==========================================');
+    
     // Detectar recarga de página
     const isReload = detectPageReload();
     
@@ -191,16 +202,40 @@ function init() {
     // Lógica de manejo del localStorage según el modo
     if (isReload && localStorage.getItem('productos')) {
         if (!isAdminMode) {
-            // Si NO está en modo admin, limpiar localStorage automáticamente
-            console.log('🔄 Página recargada fuera del modo admin - Limpiando caché automáticamente...');
-            localStorage.removeItem('productos');
-            localStorage.removeItem('lastLoadTime');
+            // Si NO está en modo admin, actualizar localStorage con datos frescos del JSON
+            console.log('🔄 PÁGINA RECARGADA FUERA DEL MODO ADMIN');
+            console.log('� ACTUALIZANDO CACHÉ CON DATOS FRESCOS DEL JSON...');
+            console.log('📦 Productos en caché antes de la actualización:', JSON.parse(localStorage.getItem('productos')).length);
+            
+            // Cargar datos frescos del JSON y actualizar localStorage
+            try {
+                const response = await fetch('data/productos.json');
+                if (response.ok) {
+                    const data = await response.json();
+                    const productosActualizados = Array.isArray(data) ? data : (data.productos || []);
+                    localStorage.setItem('productos', JSON.stringify(productosActualizados));
+                    console.log('✅ CACHÉ ACTUALIZADA CON DATOS FRESCOS DEL JSON');
+                    console.log('� Productos después de la actualización:', productosActualizados.length);
+                } else {
+                    console.log('⚠️ Error cargando JSON, manteniendo caché actual');
+                }
+            } catch (error) {
+                console.log('❌ Error actualizando desde JSON:', error);
+                console.log('🔄 Limpiando caché para forzar recarga completa');
+                localStorage.removeItem('productos');
+                localStorage.removeItem('lastLoadTime');
+            }
         } else {
             // Si está en modo admin, mostrar modal para elegir
+            console.log('⚙️ Página recargada en modo admin - Mostrando opciones de caché');
             setTimeout(() => {
                 showCacheManagementModal();
             }, 1000); // Esperar un segundo para que cargue la interfaz
         }
+    } else if (!localStorage.getItem('productos')) {
+        console.log('📝 No hay caché de productos - Cargando desde JSON');
+    } else {
+        console.log('🔄 Primera carga de página - No se detectó recarga');
     }
     
     // Inicializar gestión de caché
@@ -247,7 +282,35 @@ function init() {
         if (isAdminMode) {
             initAdminMode();
         }
+        
+        // Inicializar modal de selección
+        initModalSeleccion();
+        
+        // Mostrar estado final del localStorage
+        console.log('📊 ESTADO FINAL DEL SISTEMA:');
+        console.log('   - Modo admin:', isAdminMode ? 'ACTIVADO' : 'DESACTIVADO');
+        console.log('   - Productos cargados:', productos.length);
+        console.log('   - Caché en localStorage:', localStorage.getItem('productos') ? 'SÍ' : 'NO');
+        console.log('==========================================');
     });
+}
+
+// Inicializar modal de selección
+function initModalSeleccion() {
+    console.log('🔧 Inicializando modal de selección...');
+    
+    const selectionModal = document.getElementById('selectionModal');
+    if (selectionModal) {
+        // Cerrar modal al hacer clic fuera
+        selectionModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                cerrarModalSeleccion();
+            }
+        });
+        console.log('✅ Modal de selección inicializado correctamente');
+    } else {
+        console.error('❌ No se encontró el modal de selección en el DOM');
+    }
 }
 
 // Inicializar sistema de filtros moderno
@@ -296,22 +359,25 @@ function initModernFilters() {
 // Cargar productos desde el archivo JSON
 async function loadProductsFromJSON() {
     try {
+        console.log('📦 CARGANDO PRODUCTOS...');
+        
         // Limpiar localStorage corrupto (temporal)
         const stored = localStorage.getItem('productos');
         if (stored) {
             try {
                 const parsed = JSON.parse(stored);
                 if (!Array.isArray(parsed)) {
-                    console.log('Limpiando localStorage corrupto...');
+                    console.log('🧹 Limpiando localStorage corrupto...');
                     localStorage.removeItem('productos');
                 }
             } catch (e) {
-                console.log('Limpiando localStorage corrupto...');
+                console.log('🧹 Limpiando localStorage corrupto...');
                 localStorage.removeItem('productos');
             }
         }
         
         // Siempre cargar productos base del JSON
+        console.log('📄 Cargando productos desde data/productos.json...');
         const response = await fetch('data/productos.json');
         let productosBase = [];
         
@@ -319,8 +385,10 @@ async function loadProductsFromJSON() {
             const data = await response.json();
             // Verificar si el JSON tiene estructura con metadata o es array directo
             productosBase = Array.isArray(data) ? data : (data.productos || []);
+            console.log('✅ JSON cargado exitosamente:', productosBase.length, 'productos');
         } else {
             // Fallback a productos por defecto si no se puede cargar el JSON
+            console.log('❌ Error cargando JSON, usando productos por defecto');
             productosBase = getDefaultProducts();
         }
         
@@ -328,21 +396,25 @@ async function loadProductsFromJSON() {
         const productosGuardados = localStorage.getItem('productos');
         if (productosGuardados) {
             // Si hay productos en localStorage, usarlos (incluye editados)
+            console.log('💾 Usando productos desde localStorage (incluye modificaciones)');
             productos = JSON.parse(productosGuardados);
         } else {
             // Si no hay productos guardados, usar los productos base
+            console.log('🆕 Usando productos base del JSON');
             productos = productosBase;
             // Guardar productos base en localStorage para futuras ediciones
             localStorage.setItem('productos', JSON.stringify(productosBase));
+            console.log('💾 Productos base guardados en localStorage');
         }
         
-        console.log(`Productos cargados: ${productos.length} productos disponibles`);
+        console.log(`✅ PRODUCTOS CARGADOS: ${productos.length} productos disponibles`);
         
     } catch (error) {
-        console.error('Error cargando productos:', error);
+        console.error('❌ ERROR CARGANDO PRODUCTOS:', error);
         // Fallback a productos por defecto
         productos = getDefaultProducts();
         localStorage.setItem('productos', JSON.stringify(productos));
+        console.log('🔄 Usando productos por defecto como fallback');
     }
 }
 
@@ -502,7 +574,7 @@ function renderProductos() {
                     <span class="price">$${producto.precio}</span>
                     ${producto.precioOriginal ? `<span class="original-price">$${producto.precioOriginal}</span>` : ''}
                 </div>
-                <button class="add-to-cart" onclick="event.stopPropagation(); agregarAlCarrito(${producto.id})">
+                <button class="add-to-cart" onclick="event.stopPropagation(); abrirModalSeleccion(${producto.id})">
                     Añadir al Carrito
                 </button>
             </div>
@@ -817,16 +889,28 @@ function cargarMasProductos() {
     renderProductos();
 }
 
-function agregarAlCarrito(id) {
+function agregarAlCarrito(id, tallaSeleccionada = null, colorSeleccionado = null, cantidad = 1) {
     const producto = productos.find(p => p.id === id);
-    const itemExistente = carrito.find(item => item.id === id);
+    
+    // Crear una clave única para el item basada en id, talla y color
+    const claveItem = `${id}-${tallaSeleccionada || 'sin-talla'}-${colorSeleccionado || 'sin-color'}`;
+    
+    // Buscar si ya existe este item específico (misma combinación)
+    const itemExistente = carrito.find(item => 
+        item.id === id && 
+        item.tallaSeleccionada === tallaSeleccionada && 
+        item.colorSeleccionado === colorSeleccionado
+    );
     
     if (itemExistente) {
-        itemExistente.cantidad += 1;
+        itemExistente.cantidad += cantidad;
     } else {
         carrito.push({
             ...producto,
-            cantidad: 1
+            cantidad: cantidad,
+            tallaSeleccionada: tallaSeleccionada,
+            colorSeleccionado: colorSeleccionado,
+            claveItem: claveItem
         });
     }
     
@@ -835,8 +919,214 @@ function agregarAlCarrito(id) {
     mostrarNotificacion('Producto añadido al carrito');
 }
 
-function eliminarDelCarrito(id) {
-    carrito = carrito.filter(item => item.id !== id);
+// Variables globales para el modal de selección
+let productoSeleccionado = null;
+let tallaSeleccionada = null;
+let colorSeleccionado = null;
+
+function abrirModalSeleccion(id) {
+    console.log('🔍 Intentando abrir modal de selección para producto ID:', id);
+    
+    const producto = productos.find(p => p.id === id);
+    if (!producto) {
+        console.error('❌ No se encontró el producto con ID:', id);
+        return;
+    }
+    
+    console.log('✅ Producto encontrado:', producto.nombre);
+    
+    productoSeleccionado = producto;
+    tallaSeleccionada = null;
+    colorSeleccionado = null;
+    
+    // Verificar que todos los elementos del modal existen
+    const elementos = {
+        modal: document.getElementById('selectionModal'),
+        modalProductName: document.getElementById('modalProductName'),
+        modalProductImage: document.getElementById('modalProductImage'),
+        modalProductTitle: document.getElementById('modalProductTitle'),
+        modalProductPrice: document.getElementById('modalProductPrice'),
+        modalQuantity: document.getElementById('modalQuantity'),
+        tallaGroup: document.getElementById('tallaGroup'),
+        tallaOptions: document.getElementById('tallaOptions'),
+        colorGroup: document.getElementById('colorGroup'),
+        colorOptions: document.getElementById('colorOptions')
+    };
+    
+    console.log('🔍 Verificando elementos del modal...');
+    for (const [nombre, elemento] of Object.entries(elementos)) {
+        if (!elemento) {
+            console.error(`❌ No se encontró el elemento: ${nombre}`);
+            return;
+        }
+    }
+    console.log('✅ Todos los elementos del modal encontrados');
+    
+    // Llenar información del producto
+    elementos.modalProductName.textContent = `Seleccionar opciones - ${producto.nombre}`;
+    elementos.modalProductImage.src = getValidImageSrc(producto.imagen);
+    elementos.modalProductTitle.textContent = producto.nombre;
+    elementos.modalProductPrice.textContent = `$${producto.precio}`;
+    elementos.modalQuantity.value = 1;
+    
+    // Configurar opciones de talla
+    if (producto.tallas && producto.tallas.length > 0) {
+        elementos.tallaGroup.style.display = 'block';
+        elementos.tallaOptions.innerHTML = producto.tallas.map(talla => 
+            `<button type="button" class="option-btn" onclick="seleccionarTalla('${talla}')">${talla}</button>`
+        ).join('');
+        console.log('✅ Tallas configuradas:', producto.tallas);
+    } else {
+        elementos.tallaGroup.style.display = 'none';
+        console.log('ℹ️ Producto sin tallas disponibles');
+    }
+    
+    // Configurar opciones de color
+    if (producto.colores && producto.colores.length > 0) {
+        elementos.colorGroup.style.display = 'block';
+        elementos.colorOptions.innerHTML = producto.colores.map(color => 
+            `<button type="button" class="option-btn" onclick="seleccionarColor('${color}')">${color}</button>`
+        ).join('');
+        console.log('✅ Colores configurados:', producto.colores);
+    } else {
+        elementos.colorGroup.style.display = 'none';
+        console.log('ℹ️ Producto sin colores disponibles');
+    }
+    
+    // Mostrar modal
+    elementos.modal.style.display = 'flex';
+    console.log('✅ Modal mostrado');
+    
+    // Validar botón de agregar
+    validarSeleccion();
+}
+
+function seleccionarTalla(talla) {
+    console.log('👕 Seleccionando talla:', talla);
+    tallaSeleccionada = talla;
+    
+    // Actualizar estados visuales
+    document.querySelectorAll('#tallaOptions .option-btn').forEach(btn => {
+        btn.classList.remove('selected');
+        if (btn.textContent === talla) {
+            btn.classList.add('selected');
+        }
+    });
+    
+    validarSeleccion();
+}
+
+function seleccionarColor(color) {
+    console.log('🎨 Seleccionando color:', color);
+    colorSeleccionado = color;
+    
+    // Actualizar estados visuales
+    document.querySelectorAll('#colorOptions .option-btn').forEach(btn => {
+        btn.classList.remove('selected');
+        if (btn.textContent === color) {
+            btn.classList.add('selected');
+        }
+    });
+    
+    validarSeleccion();
+}
+
+function cambiarCantidad(cambio) {
+    const input = document.getElementById('modalQuantity');
+    const valorActual = parseInt(input.value) || 1;
+    const nuevoValor = Math.max(1, Math.min(10, valorActual + cambio));
+    input.value = nuevoValor;
+}
+
+function validarSeleccion() {
+    console.log('🔍 Validando selección...');
+    const btnConfirmar = document.getElementById('btnConfirmarAgregar');
+    
+    if (!productoSeleccionado) {
+        console.log('❌ No hay producto seleccionado');
+        btnConfirmar.disabled = true;
+        btnConfirmar.classList.remove('ready');
+        return;
+    }
+    
+    // Verificar si se requieren tallas y colores
+    const requiereTalla = productoSeleccionado.tallas && productoSeleccionado.tallas.length > 0;
+    const requiereColor = productoSeleccionado.colores && productoSeleccionado.colores.length > 0;
+    
+    const tallaValida = !requiereTalla || tallaSeleccionada;
+    const colorValido = !requiereColor || colorSeleccionado;
+    
+    const seleccionCompleta = tallaValida && colorValido;
+    
+    console.log('🔍 Estado de validación:');
+    console.log('   - Requiere talla:', requiereTalla, '| Talla seleccionada:', tallaSeleccionada);
+    console.log('   - Requiere color:', requiereColor, '| Color seleccionado:', colorSeleccionado);
+    console.log('   - Validación exitosa:', seleccionCompleta);
+    
+    btnConfirmar.disabled = !seleccionCompleta;
+    
+    // Agregar animación cuando esté listo
+    if (seleccionCompleta) {
+        btnConfirmar.classList.add('ready');
+        console.log('✅ Botón listo para usar!');
+    } else {
+        btnConfirmar.classList.remove('ready');
+    }
+}
+
+function confirmarAgregarAlCarrito() {
+    console.log('✅ Confirmando agregar al carrito...');
+    if (!productoSeleccionado) {
+        console.error('❌ No hay producto seleccionado');
+        return;
+    }
+    
+    const cantidad = parseInt(document.getElementById('modalQuantity').value) || 1;
+    console.log('📦 Agregando:', productoSeleccionado.nombre, 'Cantidad:', cantidad, 'Talla:', tallaSeleccionada, 'Color:', colorSeleccionado);
+    
+    agregarAlCarrito(
+        productoSeleccionado.id, 
+        tallaSeleccionada, 
+        colorSeleccionado, 
+        cantidad
+    );
+    
+    cerrarModalSeleccion();
+}
+
+function cerrarModalSeleccion() {
+    console.log('❌ Cerrando modal de selección');
+    document.getElementById('selectionModal').style.display = 'none';
+    productoSeleccionado = null;
+    tallaSeleccionada = null;
+    colorSeleccionado = null;
+}
+
+function eliminarDelCarrito(id, tallaSeleccionada = null, colorSeleccionado = null) {
+    carrito = carrito.filter(item => !(
+        item.id === id && 
+        item.tallaSeleccionada === tallaSeleccionada && 
+        item.colorSeleccionado === colorSeleccionado
+    ));
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+    actualizarCarrito();
+    renderCarrito();
+}
+
+function eliminarDelCarritoEspecifico(index) {
+    carrito.splice(index, 1);
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+    actualizarCarrito();
+    renderCarrito();
+}
+
+function cambiarCantidadCarrito(index, nuevaCantidad) {
+    if (nuevaCantidad <= 0) {
+        eliminarDelCarritoEspecifico(index);
+        return;
+    }
+    
+    carrito[index].cantidad = nuevaCantidad;
     localStorage.setItem('carrito', JSON.stringify(carrito));
     actualizarCarrito();
     renderCarrito();
@@ -869,21 +1159,27 @@ function renderCarrito() {
     
     if (carrito.length === 0) {
         cartItems.innerHTML = '<p>Tu carrito está vacío</p>';
-        cartTotal.textContent = '€0.00';
+        cartTotal.textContent = '$0.00';
         return;
     }
     
-    cartItems.innerHTML = carrito.map(item => `
+    cartItems.innerHTML = carrito.map((item, index) => `
         <div class="cart-item">
             <img src="${item.imagen}" alt="${item.nombre}">
             <div class="cart-item-info">
                 <div class="cart-item-title">${item.nombre}</div>
-                <div class="cart-item-price">€${item.precio}</div>
+                ${item.tallaSeleccionada || item.colorSeleccionado ? `
+                    <div class="cart-item-details">
+                        ${item.tallaSeleccionada ? `<span class="detail-tag">Talla: ${item.tallaSeleccionada}</span>` : ''}
+                        ${item.colorSeleccionado ? `<span class="detail-tag">Color: ${item.colorSeleccionado}</span>` : ''}
+                    </div>
+                ` : ''}
+                <div class="cart-item-price">$${item.precio}</div>
                 <div class="cart-item-controls">
-                    <button onclick="cambiarCantidad(${item.id}, ${item.cantidad - 1})">-</button>
+                    <button onclick="cambiarCantidadCarrito(${index}, ${item.cantidad - 1})">-</button>
                     <span>${item.cantidad}</span>
-                    <button onclick="cambiarCantidad(${item.id}, ${item.cantidad + 1})">+</button>
-                    <button onclick="eliminarDelCarrito(${item.id})" style="margin-left: 10px; color: red;">🗑️</button>
+                    <button onclick="cambiarCantidadCarrito(${index}, ${item.cantidad + 1})">+</button>
+                    <button onclick="eliminarDelCarritoEspecifico(${index})" style="margin-left: 10px; color: red;">🗑️</button>
                 </div>
             </div>
         </div>
@@ -911,8 +1207,8 @@ function enviarPedidoPorWhatsApp() {
         mensaje += `${index + 1}. ${item.nombre}\n`;
         mensaje += `   💰 Precio: $${item.precio}\n`;
         mensaje += `   📦 Cantidad: ${item.cantidad}\n`;
-        if (item.talla) mensaje += `   👕 Talla: ${item.talla}\n`;
-        if (item.color) mensaje += `   🎨 Color: ${item.color}\n`;
+        if (item.tallaSeleccionada) mensaje += `   👕 Talla: ${item.tallaSeleccionada}\n`;
+        if (item.colorSeleccionado) mensaje += `   🎨 Color: ${item.colorSeleccionado}\n`;
         mensaje += '\n';
     });
     
@@ -1516,8 +1812,17 @@ function checkAdminMode() {
     
     if (adminParam === 'mva2025') {
         isAdminMode = true;
-        console.log('🔧 Modo Admin Activado');
+        console.log('🔧 MODO ADMIN ACTIVADO');
+        console.log('⚙️ URL contiene parámetro admin válido');
         document.body.classList.add('admin-mode');
+    } else {
+        isAdminMode = false;
+        console.log('👤 MODO USUARIO NORMAL');
+        if (adminParam) {
+            console.log('❌ Parámetro admin inválido:', adminParam);
+        } else {
+            console.log('📄 No se detectó parámetro admin en la URL');
+        }
     }
 }
 
