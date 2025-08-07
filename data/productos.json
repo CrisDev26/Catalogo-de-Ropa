@@ -39,23 +39,22 @@
       "id": 2
     },
     {
-      "id": 3,
       "nombre": "Falda Short",
       "descripcion": "Diseño innovador de falda short, con falda en la parte delantera y short en la parte trasera.",
-      "precio": 8.99,
+      "precio": 8.5,
       "imagen": "images/falda-short.jpg",
       "categoria": "mujer",
       "subcategoria": "faldas",
       "nuevo": true,
       "tallas": [
-        "S",
-        "M",
-        "L"
+        "XS",
+        "S"
       ],
       "colores": [
         "Vino",
         "Rosa"
-      ]
+      ],
+      "id": 3
     },
     {
       "id": 4,
@@ -75,13 +74,12 @@
       ]
     },
     {
-      "id": 5,
-      "nombre": "Tops",
+      "nombre": "Top Lazo",
       "descripcion": "Top con lazo en la parte delantera, ideal para ocasiones especiales.",
       "precio": 7.99,
       "imagen": "images/blusacoreana.jpg",
       "categoria": "mujer",
-      "subcategoria": "Tops",
+      "subcategoria": null,
       "nuevo": false,
       "tallas": [
         "XS",
@@ -90,7 +88,8 @@
       "colores": [
         "Gris",
         "Blanco"
-      ]
+      ],
+      "id": 5
     },
     {
       "nombre": "Conjunto Casual",
@@ -158,8 +157,7 @@
       ],
       "colores": [
         "Negro",
-        "Café",
-        "Rosado"
+        "Café"
       ],
       "id": 9
     },
@@ -250,7 +248,7 @@
     {
       "nombre": "Blusa Flor",
       "descripcion": "Blusa sin mangas color melocotón con flor decorativa en el pecho, adornada con detalles de perlas doradas. Un diseño femenino y elegante.",
-      "precio": 11.99,
+      "precio": 11.5,
       "imagen": "images/blusacoral_rosa.jpg",
       "categoria": "mujer",
       "subcategoria": "blusas",
@@ -351,7 +349,7 @@
       "precio": 6.99,
       "imagen": "images/azul_tejida.jpg",
       "categoria": "mujer",
-      "subcategoria": "tops",
+      "subcategoria": "traje-bano",
       "nuevo": false,
       "tallas": [
         "XS",
@@ -401,7 +399,7 @@
     },
     {
       "nombre": "Top Básica",
-      "descripcion": "Top strapless bicolor negro y blanco con diseño ajustado que realza la figura para un look moderno.",
+      "descripcion": "Esta blusa strapless bicolor en negro y blanco es la opción ideal para un look moderno y sofisticado. Con un diseño ajustado que realza la figura y detalles elegantes en la parte superior.",
       "precio": 4.99,
       "imagen": "images/top_negrayblanco.png",
       "categoria": "mujer",
@@ -415,6 +413,24 @@
         "Negro"
       ],
       "id": 24
+    },
+    {
+      "nombre": "Blusa Nova",
+      "descripcion": "Top sin mangas en vibrante color fucsia con botones frontales y ribetes blancos que realzan su diseño tipo cardigan.",
+      "precio": 4.99,
+      "imagen": "images/Blusafucsiabotones.jpg",
+      "categoria": "mujer",
+      "subcategoria": "blusas",
+      "nuevo": false,
+      "tallas": [
+        "XS",
+        "S",
+        "M"
+      ],
+      "colores": [
+        "Fucsia"
+      ],
+      "id": 25
     }
   ]
 }
